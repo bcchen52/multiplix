@@ -1,0 +1,139 @@
+{% extends "multiplix/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container" id="home">
+        <div id="settings">
+            <div class="d-flex justify-content-center my-auto">
+                Test Settings
+                <button class="btn btn-primary default">Default</button>
+            </div>
+            <hr>
+            <form id="settings_form">
+                <div class="row justify-content-center settings-row" id="time">
+                    <div class="col-sm-auto col-12 d-sm-inline-block d-flex justify-content-center">
+                        <div class="select-time-label">Select Time</div>
+                    </div>
+                    <div class="col-auto d-sm-block d-none">
+                        <div class="select-time-label">|</div>
+                    </div>
+                    <div class="col-12 d-sm-none d-flex justify-content-center">
+                        <div class="col-4"><hr></div>
+                    </div>
+                    <div class="col-auto">
+                        <input type="radio" class="btn-check time-options" name="options" id="option1" autocomplete="off" value="30">
+                        <label class="btn" for="option1">30</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="radio" class="btn-check time-options" name="options" id="option2" autocomplete="off" value="60">
+                        <label class="btn" for="option2">60</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="radio" class="btn-check time-options" name="options" id="option3" checked autocomplete="off" value="120">
+                        <label class="btn" for="option3">120</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="radio" class="btn-check time-options" name="options" id="option4" autocomplete="off" value="180">
+                        <label class="btn" for="option4">180</label>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="col-10"><hr></div>
+                    </div>
+                </div>
+                <div class="row justify-content-center settings-row">
+                    <div class="col-sm-auto col-12 d-sm-inline-block d-flex align-self-center justify-content-center">
+                        <div class="form-check form-switch sign-label">
+                            <input class="form-check-input" type="checkbox" role="switch" id="addition-switch" checked>
+                            <label class="form-check-label" for="addition-switch">Addition</label>
+                        </div>
+                    </div>
+                    <div class="col-auto d-sm-block d-none align-self-center">
+                        <div class="select-time-label">|</div>
+                    </div>
+                    <div class="col-12 d-sm-none d-flex justify-content-center">
+                        <div class="col-4"><hr></div>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <form id="addition_constraints">
+                            <span>
+                                (
+                                <input id="add_min_1" type="text" class="num-input" value="99">
+                                to
+                                <input id="add_max_1" type="text" class="num-input" value="12">
+                                )
+                                <span class="signs  my-auto">+/-</span>
+                                (
+                                <input id="add_min_2" type="text" class="num-input" value="12">
+                                to
+                                <input id="add_max_2" type="text" class="num-input" value="5">
+                                )
+                            </span>
+                        </form>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="col-10"><hr></div>
+                    </div>
+                
+                </div>
+                <div class="row justify-content-center settings-row">
+                    <div class="col-auto align-self-center">
+                        <div class="form-check form-switch sign-label">
+                            <input class="form-check-input" type="checkbox" role="switch" id="multiplication-switch" checked>
+                            <label class="form-check-label" for="multiplication-switch">Multiplication</label>
+                        </div>
+                    </div>
+                    <div class="col-auto d-sm-block d-none align-self-center">
+                        <div class="select-time-label">|</div>
+                    </div>
+                    <div class="col-12 d-sm-none d-flex justify-content-center">
+                        <div class="col-4"><hr></div>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <form id="multiplication_constraints">
+                            <span>
+                                (
+                                <input id="mult_min_1" type="text" class="num-input" value="99">
+                                to
+                                <input id="mult_max_1" type="text" class="num-input" value="12">
+                                )
+                                <span class="signs">x/&divide;</span>
+                                (
+                                <input id="mult_min_2" type="text" class="num-input" value="12">
+                                to
+                                <input id="mult_max_2" type="text" class="num-input" value="5">
+                                )
+                            </span>
+                        </form>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="col-10"><hr></div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                    </div>
+                </div>
+            </form>
+            <div class="row" id="time">
+                <div class="col-12 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="enter-button">
+                        Press "Enter" to start.
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="start-test"></div>
+    </div>
+    <div class="container" id="test">
+        <div class="enter-button">Press <span class="escape-key">Esc</span> to exit</div>
+        <div id="counter"></div>
+        <div id="question"></div>
+    </div>
+    <div id="results">
+        Results page
+    </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'multiplix/multiplix.js' %}"></script>
+{% endblock %}

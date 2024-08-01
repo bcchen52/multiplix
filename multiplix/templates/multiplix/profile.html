@@ -1,0 +1,12 @@
+{% extends "multiplix/layout.html" %}
+
+{% block title %}
+{{ user.username }}
+{% endblock %}
+
+{% block body %}
+Hello, {{ user.username }}
+
+Logout <a href="{% url 'logout' %}">here.</a>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+.body {
+    margin:5%;
+}
+
+.navbar {
+    margin-left:5%;
+    margin-right:5%;
+}
+
+.select-time-label {
+    padding:5px;
+}
+
+#time-selector > .btn:active {
+    border: 2px;
+    color:blue;
+}
+
+.settings-row {
+    margin:20px;
+}
+
+.signs {
+    font-size: 20px;
+}
+
+#enter-button {
+    background-color:white;
+    color:black;
+}
+
+.num-input {
+    width:30px;
+    font-size: 12px;
+    height:20px;
+}
+
+#enter-button {
+    font-size:50px;
+}

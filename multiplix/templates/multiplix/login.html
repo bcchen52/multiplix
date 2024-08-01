@@ -1,0 +1,44 @@
+{% extends "multiplix/layout.html" %}
+
+{% block body %}
+
+    <h2>Login</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control" type="text" name="username" placeholder="Username" required="required">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password" required="required">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Login">
+    </form>
+
+    Don't have an account?
+    <h2>Register</h2>
+
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="text" name="username" placeholder="Username" required="required">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email Address" required="required">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password" required="required">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" required="required">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+
+    <a href="{% url 'register' %}">Register here.</a>
+
+{% endblock %}
