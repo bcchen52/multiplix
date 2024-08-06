@@ -1,10 +1,12 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt 
 
-from .models import User
+from .models import User, Profile, Test
 
 # Create your views here.
 
@@ -74,15 +76,34 @@ def leaderboard(request):
     return render(request, "multiplix/leaderboard.html", {
     })
 
+@csrf_exempt 
 def test(request, id):
     #create test
-    if request.method == 'POST':
-        #create test, return testid
-        pass
-
     #finish test
     if request.method == 'PUT':
+        #clear all empty tests
         pass
 
+@csrf_exempt 
+def create_test(request):
+    Test.objects.filter(user = None).delete()
+    #kill tests from people without a user
+    tests = Test.objects.all().count()
+    print(tests)
+    if request.method == 'POST':
+        #create test, return testid
+        data = json.loads(request.body)
+        #print(data)
+        if request.user.is_authenticated:
+            current_user = request.user
+        else:
+            current_user = None
+        
+        test = Test(user=current_user, time=data["time"], add=data["add"], mult=data["mult"], default=data["is_default"])
+        test.save()
+        return JsonResponse({
+            "test_id": test.id,
+            "time": test.get_user(),
+        }, status=400)
 
 

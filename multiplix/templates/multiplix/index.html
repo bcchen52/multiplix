@@ -4,12 +4,20 @@
 {% block body %}
     <div class="container" id="home">
         <div id="settings">
-            <div class="d-flex justify-content-center my-auto">
-                Test Settings
-                <button class="btn btn-primary default">Default</button>
+            <div class="row"></div>
+                <div class="d-flex justify-content-center my-auto">
+                    <h1>Test Settings</h1>
+                </div>
             </div>
             <hr>
             <form id="settings_form">
+                <div class="alert alert-primary" role="alert" id="settings-error">
+                </div>
+                <div class="row justify-content-center settings-row" id="default">
+                    <div class="d-flex justify-content-center my-auto">
+                        <button class="btn btn-primary default">Reset to Default Settings</button>
+                    </div>
+                </div>
                 <div class="row justify-content-center settings-row" id="time">
                     <div class="col-sm-auto col-12 d-sm-inline-block d-flex justify-content-center">
                         <div class="select-time-label">Select Time</div>
@@ -57,15 +65,15 @@
                         <form id="addition_constraints">
                             <span>
                                 (
-                                <input id="add_min_1" type="text" class="num-input" value="99">
+                                <input id="add_min_1" type="text" class="num-input add-input" value="12" type="number">
                                 to
-                                <input id="add_max_1" type="text" class="num-input" value="12">
+                                <input id="add_max_1" type="text" class="num-input add-input" value="99" type="number">
                                 )
                                 <span class="signs  my-auto">+/-</span>
                                 (
-                                <input id="add_min_2" type="text" class="num-input" value="12">
+                                <input id="add_min_2" type="text" class="num-input add-input" value="5" type="number">
                                 to
-                                <input id="add_max_2" type="text" class="num-input" value="5">
+                                <input id="add_max_2" type="text" class="num-input add-input" value="12" type="number">
                                 )
                             </span>
                         </form>
@@ -92,15 +100,15 @@
                         <form id="multiplication_constraints">
                             <span>
                                 (
-                                <input id="mult_min_1" type="text" class="num-input" value="99">
+                                <input id="mult_min_1" type="text" class="num-input mult-input" value="12" maxlength="2" type="number">
                                 to
-                                <input id="mult_max_1" type="text" class="num-input" value="12">
+                                <input id="mult_max_1" type="text" class="num-input mult-input" value="99" maxlength="2" type="number">
                                 )
                                 <span class="signs">x/&divide;</span>
                                 (
-                                <input id="mult_min_2" type="text" class="num-input" value="12">
+                                <input id="mult_min_2" type="text" class="num-input mult-input" value="5" maxlength="2" type="number">
                                 to
-                                <input id="mult_max_2" type="text" class="num-input" value="5">
+                                <input id="mult_max_2" type="text" class="num-input mult-input" value="12" maxlength="2" type="number">
                                 )
                             </span>
                         </form>
@@ -117,7 +125,7 @@
             <div class="row" id="time">
                 <div class="col-12 d-flex justify-content-center">
                     <button type="button" class="btn btn-primary btn-lg btn-block" id="enter-button">
-                        Press "Enter" to start.
+                        Press <span class="key-button">"Enter"</span> to start.
                     </button>
                 </div>
             </div>
@@ -126,11 +134,44 @@
     </div>
     <div class="container" id="test">
         <div class="enter-button">Press <span class="escape-key">Esc</span> to exit</div>
-        <div id="counter"></div>
-        <div id="question"></div>
+        <div id="counter">
+
+        </div>
+        <div id="question">
+            
+        </div>
+        <div id="score">
+
+        </div>
+        <input id="answer"autofocus>
+        
     </div>
-    <div id="results">
-        Results page
+    <div class="container" id="results">
+        <div class="d-flex justify-content-center my-auto">
+            <h1>Results page</h1>
+        </div>
+        <div class="row">
+            <div class="col-auto" id="display-score">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="d-flex justify-content-center my-auto">
+                    QPM
+                </div>
+                <div class="d-flex justify-content-center my-auto" id="qpm">
+                    
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="col-12">
+                    QPM
+                </div>
+                <div class="col-12" id="qpm">
+                    
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

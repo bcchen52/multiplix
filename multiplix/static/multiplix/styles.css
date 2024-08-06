@@ -1,5 +1,6 @@
 .body {
     margin:5%;
+    font-family: Cambria, Georgia, serif;;
 }
 
 .navbar {
@@ -37,4 +38,12 @@
 
 #enter-button {
     font-size:50px;
+    border-color: white;
+}
+
+.key-button {
+    border-radius:10px;
+    background-color: gray;
+    color:white;
+    padding:5px;
 }

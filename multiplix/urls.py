@@ -10,6 +10,6 @@ urlpatterns = [
     path("profile/<str:user>", views.profile, name="profile"),
     path("info", views.info, name="info"),
     path("leaderboard", views.leaderboard, name="leaderboard"),
+    path("test", views.create_test, name="create_test"),
     path("test/<int:id>", views.test, name="test"),
-    path("test", views.test, name="test"),
 ]
