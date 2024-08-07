@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     home();
     //start test, only works if test hasn't been started, which is indicated if incrementer is null
-    document.addEventListener("keypress", event => {
+    document.addEventListener("keydown", event => {
         if (event.key === "Enter") {
             console.log('enter clicked');
             if (incrementer == null) {
@@ -25,33 +25,61 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 //If a click did happen
                 let operation = "mult";
-                let disabled = true;
                 if (operation_switch.id == "addition-switch") {
                     operation = "add";
                 }
-                if (sign_clicked(operation)){
-                    document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
-                        input.disabled = false;
-                        console.log("undisabled");
-                    });
-                } else {
-                    document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
-                        input.disabled = true;
-                        console.log("disabled");
-                    });
-                }
+                disable_inputs(operation);
             }
         }
     });
 
+    document.querySelector('.default').onclick = () => {
+        document.querySelector('#addition-switch').checked = default_settings[0];
+        document.querySelector('#add_min_1').value = default_settings[1];
+        document.querySelector('#add_max_1').value = default_settings[2];
+        document.querySelector('#add_min_2').value = default_settings[3];
+        document.querySelector('#add_max_2').value = default_settings[4];
+        document.querySelector('#multiplication-switch').checked = default_settings[5];
+        document.querySelector('#mult_min_1').value = default_settings[1];
+        document.querySelector('#mult_max_1').value = default_settings[2];
+        document.querySelector('#mult_min_2').value = default_settings[3];
+        document.querySelector('#mult_max_2').value = default_settings[4];
+
+        disable_inputs('add');
+        disable_inputs('mult');
+
+        console.log('default clicked');
+    }
+
     //default button
 });
 
-//TODO list
-//if default(add to Test.state)
-//calculate adjusted score
+function disable_inputs(operation){
+    if (sign_clicked(operation)){
+        document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
+            input.disabled = false;
+            console.log("undisabled");
+        });
+    } else {
+        document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
+            input.disabled = true;
+            console.log("disabled");
+        });
+    }
+}
+
+//TODO list 
 //if user...
+//-----full
 //leaderboard
+//user stats
+
+//-----backend
+//leaderboard models 
+
+//-----frontend
+//settings
+
 
 //default settings 
 const default_settings = [true, 12, 99, 5, 12, true, 12, 99, 5, 12];
@@ -104,15 +132,40 @@ Test.state = {
     score: 0,
     specifications: [], 
     time: 0,
-    timestamps: [],
-    reset_test: (id, specifications, time) => {
+    timestamp: 0,
+    is_default: true,
+    a_times: [],
+    s_times: [],
+    m_times: [],
+    d_times: [],
+    reset_test: (id, specifications, time, is_default) => {
         Test.state.test_id = id;
         Test.state.score = 0;
         Test.state.time = time;
+        Test.state.timestamp = time;
         Test.state.specifications = specifications;
+        Test.state.a_times = [];
+        Test.state.s_times = [];
+        Test.state.m_times = [];
+        Test.state.d_times = [];
+        Test.state.is_default = is_default;
     },
     correct: () => {
         Test.state.score++;
+    },
+    new_time: (equation_type, time) => {
+        //console.log(equation_type);
+        //console.log(`${Test.state.timestamp} - ${time} = ${Test.state.timestamp-time}`)
+        if (equation_type == "addition") {
+            Test.state.a_times.push(Test.state.timestamp-time);
+        } else if (equation_type == "subtraction") {
+            Test.state.s_times.push(Test.state.timestamp-time);
+        } else if (equation_type == "division") {
+            Test.state.d_times.push(Test.state.timestamp-time);
+        } else {
+            Test.state.m_times.push(Test.state.timestamp-time);
+        }
+        Test.state.timestamp = time;
     }
 }
 
@@ -148,14 +201,51 @@ function results() {
     //console.log(incrementer == null);
     console.log(`The score is ${Test.state.score}`);
 
-    const score = document.querySelector('#display-score');
-    score.innerHTML = Test.state.score;
-    const qpm = document.querySelector('#qpm');
-    qpm.innerHTML = Test.state.score / ((Test.state.time)/60);
+    let qpm = Test.state.score / ((Test.state.time)/60);
+    qpm = Math.round(qpm * 100) / 100;
 
+    document.querySelector('#score').innerHTML = Test.state.score;
+    console.log(document.querySelector('#score'));
+
+    const qpm_div = document.querySelector('#qpm');
+
+    average_times = get_average_times();
+
+    qpm_div.innerHTML = qpm;
+
+
+    //average times
+    const addition_averages = document.querySelector('#addition-averages');
+    addition_averages.style.display = "none";
+    const multiplication_averages = document.querySelector('#multiplication-averages');
+    multiplication_averages.style.display = "none";
+
+    if (Test.state.specifications[0]){
+        addition_averages.style.display = 'block';
+        document.querySelector('#add-avg').innerHTML = average_times[0];
+        document.querySelector('#sub-avg').innerHTML = average_times[1];
+    } if (Test.state.specifications[5]){
+        multiplication_averages.style.display = 'block';
+        document.querySelector('#mult-avg').innerHTML = average_times[2];
+        document.querySelector('#div-avg').innerHTML = average_times[3];
+    } 
+
+    //warning message
+
+    console.log(document.querySelector('#logged_in').value == false);
+    const result_message = document.querySelector('.result-message');
+
+    if (document.querySelector('#logged_in').value == "True") {
+        if (!Test.state.is_default){
+            result_message.innerHTML = "Play on default settings to save your scores.";
+        } else {
+            result_message.innerHTML = ""; 
+        }
+    } else {
+        console.log("not logged in");
+        result_message.innerHTML = `<p><a href="/login">Log in</a> to save your data and place on the leaderboards.</p>`;
+    };
 }
-
-
 function make_test() {
     //hide message block within the test container, reactived if incorrect settings
 
@@ -170,6 +260,9 @@ function make_test() {
     error.style.display = 'none';
 
     if (settings_info[0]) {
+        console.log("test start");
+
+        let is_def = is_default(settings);
         //hide error message
         const home = document.querySelector("#home");
         home.style.display = 'none';
@@ -187,7 +280,7 @@ function make_test() {
                 time: time,
                 add: settings[0],
                 mult: settings[5],
-                is_default: is_default(settings),
+                is_default: is_def,
             })
         })
         .then( response => response.json())
@@ -196,7 +289,7 @@ function make_test() {
             console.log(result.test_id);
             //test id, set count to that
             Count.state.new_test(result.test_id);
-            Test.state.reset_test(result.test_id, settings, time);
+            Test.state.reset_test(result.test_id, settings, time, is_def);
             console.log(Test.state.specifications);
             generate_question();
         });
@@ -213,7 +306,7 @@ function make_test() {
         //result() Give the input box the function based off question.state 
 
         //set time
-        Count.state.reset(5);
+        Count.state.reset(1);
 
 
         //idt i need this
@@ -274,7 +367,7 @@ function generate_question(){
                 //mult
                 term1 = random_num(mult[1], mult[2]);
                 term2 = random_num(mult[3], mult[4]);
-                if (Math.random < 0.5) {
+                if (Math.random() < 0.5) {
                     //mult
                     sign = "multiplication";
                 } else {
@@ -320,7 +413,7 @@ function generate_question(){
     //set the state
     //display_question();
 
-    display_question(equation[0], equation[1]);
+    display_question(equation[0], equation[1], equation[2]);
 }
 
 function random_num(a, b){
@@ -366,22 +459,22 @@ function make_equation(a, b, eq_type){
     } else {
         result = a * b;
         term1 = a;
-        term1 = b;
+        term2 = b;
     }
     console.log(`${a} + ${b}`);
     equation = `${term1} ${sign} ${term2}`;
-    return [equation, result];
+    return [equation, result, eq_type];
 }
 
 
-function display_question(equation, result){
+function display_question(equation, result, eq_type){
     //console.log(display_question.caller);
 
     const question = document.querySelector('#question');
     //console.log(question);
     question.innerHTML = equation;
 
-    const score = document.querySelector('#score');
+    const score = document.querySelector('#current-score');
     score.innerHTML = Test.state.score;
 
     const input = document.querySelector('#answer');
@@ -391,7 +484,8 @@ function display_question(equation, result){
         if ((input.value) == result){     
             input.value = "";
             Test.state.correct();
-            console.log(Count.state.count);
+            Test.state.new_time(eq_type, Count.state.count);
+            console.log(`The time is ${Count.state.count}`);
             generate_question();
         }
     }
@@ -485,6 +579,28 @@ function validate_settings(){
 
     //return [is_valid?, validated_settings, error_message]
     return [is_valid, settings, error_message];
+}
+
+function get_average_times(){
+    //return add, sub, mult, div
+
+    const total_times = [Test.state.a_times, Test.state.s_times, Test.state.m_times, Test.state.d_times];
+
+    const average_times = [];
+
+    total_times.forEach((time) => {
+        if (time.length == 0) {
+            average_times.push("N/A");
+        } else {
+            let raw_time = time.reduce((a, b) => a + b, 0) / time.length;
+
+            //rounds to 0.00 if necessary
+            average_times.push(Math.round(raw_time * 100) / 100);
+        }
+    })
+    console.log(average_times);
+
+    return average_times;
 }
 
 function is_default(settings){

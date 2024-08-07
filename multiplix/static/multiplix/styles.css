@@ -1,15 +1,38 @@
+body {
+    font-family: 'Poppins';
+}
+
+
+h1 {
+    margin-top: 30px;
+}
 .body {
-    margin:5%;
-    font-family: Cambria, Georgia, serif;;
+    margin-left:5%;
+    margin-right:5%;
+}
+
+#login-container {
+    margin-top:30px;
+}
+
+.form-group {
+    margin-bottom:5px;
 }
 
 .navbar {
     margin-left:5%;
     margin-right:5%;
+    margin-top: 20px;
+    border-radius:10px;
 }
 
 .select-time-label {
     padding:5px;
+}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 #time-selector > .btn:active {
@@ -18,16 +41,13 @@
 }
 
 .settings-row {
-    margin:20px;
+    margin:10px;
+    border-radius:10px;
+    padding:5px;
 }
 
 .signs {
     font-size: 20px;
-}
-
-#enter-button {
-    background-color:white;
-    color:black;
 }
 
 .num-input {
@@ -37,8 +57,10 @@
 }
 
 #enter-button {
-    font-size:50px;
+    font-size:30px;
     border-color: white;
+    background-color:white;
+    color:black;
 }
 
 .key-button {
@@ -46,4 +68,27 @@
     background-color: gray;
     color:white;
     padding:5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.result-heading {
+    font-size:20px;
+    font-weight: bold;
+}
+
+.result-number {
+    font-size:100px;
+    color:purple;
+}
+
+.result-average-number {
+    font-size:30px;
+    color:purple;
+}
+
+.result-number-header {
+    margin-top: 5px;
+    font-size:15px;
+    font-weight: bold;
 }

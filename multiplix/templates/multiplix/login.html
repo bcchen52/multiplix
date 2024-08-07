@@ -1,44 +1,80 @@
 {% extends "multiplix/layout.html" %}
+{% load static %}
 
 {% block body %}
 
-    <h2>Login</h2>
+    <div class="container" id="login-container">
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username" required="required">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password" required="required">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
+        <form action="{% url 'login' %}" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-xl-4 col-lg-6 col-md-8 col-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <h2>Login</h2>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input class="form-control login-form" id="login-username" type="text" name="username" placeholder="Username" required="required">
+                        </div>
+                        <div class="col-12 form-group">
+                            <input class="form-control login-form" id="login-password" type="password" name="password" placeholder="Password" required="required">
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-primary" id="login-button" type="submit" value="Login" style="width:100%" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <br>
+        <form action="{% url 'register' %}" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-xl-4 col-lg-6 col-md-8 col-10">
+                    <div class="row">
+                        <div class="col-12">
+                            Don't have an account?
+                            <h2>Register</h2>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="col-12 form-group">
+                                <input class="form-control register-form" type="text" name="username" id="register-username" placeholder="Username" required="required" maxlength="16">
+                                
+                            </div>
+                            <div class="col-12 form-group">
+                                <input class="form-control register-form" type="email" name="email" id="register-email" placeholder="Email Address" required="required">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="col-12 form-group">
+                                <input class="form-control register-form" type="password" name="password" id="register-password" placeholder="Password" required="required">
+                            </div>
+                            <div class="col-12 form-group">
+                                <input class="form-control register-form" type="password" name="confirmation" id="register-confirm" placeholder="Confirm Password" required="required">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input class="btn btn-primary" id="register-button" type="submit" value="Register" style="width:100%" disabled>
+                        </div>
+                        <div class="col-12 message" id="register-message" style="display:none">
+                            {% if register_message %}
+                                {{ register_message }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+    </div>
 
-    Don't have an account?
-    <h2>Register</h2>
+{% endblock %}
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" type="text" name="username" placeholder="Username" required="required">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address" required="required">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password" required="required">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" required="required">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-
-    <a href="{% url 'register' %}">Register here.</a>
-
+{% block js %}
+<script src="{% static 'multiplix/login.js' %}"></script>
 {% endblock %}

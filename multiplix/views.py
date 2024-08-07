@@ -49,8 +49,9 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "multiplix/register.html", {
-                "message": "Passwords must match."
+            print("pass dont match")
+            return render(request, "multiplix/login.html", {
+                "register_message": "Passwords must match."
             })
 
         # Attempt to create new user
@@ -58,8 +59,9 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "multiplix/register.html", {
-                "message": "Username already taken."
+            print("user_taken")
+            return render(request, "multiplix/login.html", {
+                "register_message": "Username already taken."
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -73,15 +75,20 @@ def info(request):
     })
 
 def leaderboard(request):
+    #pagination
     return render(request, "multiplix/leaderboard.html", {
     })
 
 @csrf_exempt 
 def test(request, id):
-    #create test
     #finish test
     if request.method == 'PUT':
+        #put all values
+        #save test
+        #if it is user's personal best or leaderboard, don't kill it
+        # else kill it 
         #clear all empty tests
+        #
         pass
 
 @csrf_exempt 
