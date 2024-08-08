@@ -5,8 +5,24 @@
 {% endblock %}
 
 {% block body %}
-Hello, {{ user.username }}
-
-Logout <a href="{% url 'logout' %}">here.</a>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h1>Hello, {{ user.username }}</h1>
+        </div>
+        <div class="col-12">
+            {{ best_overall }}
+            {{ best_30 }}
+            {{ best_60 }}
+            {{ best_120 }}
+            {{ best_180 }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            Logout <a href="{% url 'logout' %}">here.</a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

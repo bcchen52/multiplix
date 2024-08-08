@@ -5,18 +5,17 @@
 
     <div class="container" id="login-container">
 
-        {% if message %}
-            <div>{{ message }}</div>
-        {% endif %}
-
         <form action="{% url 'login' %}" method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="row justify-content-center">
                 <div class="col-xl-4 col-lg-6 col-md-8 col-10">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Login</h2>
+                            <h1>Login</h1>
                         </div>
+                        {% if message %}
+                        <div class="col-12">{{ message }}</div>
+                        {% endif %}
                         <div class="col-12 form-group">
                             <input class="form-control login-form" id="login-username" type="text" name="username" placeholder="Username" required="required">
                         </div>
@@ -30,17 +29,18 @@
                 </div>
             </div>
         </form>
-        <br>
-        <br>
         <form action="{% url 'register' %}" method="post" class="needs-validation" novalidate>
             {% csrf_token %}
             <div class="row justify-content-center">
                 <div class="col-xl-4 col-lg-6 col-md-8 col-10">
                     <div class="row">
                         <div class="col-12">
-                            Don't have an account?
-                            <h2>Register</h2>
+                            Don't have an account? Register below.
+                            <h1>Register</h1>
                         </div>
+                        {% if register_message %}
+                        <div class="col-12">{{ register_message }}</div>
+                        {% endif %}
                         <div class="col-sm-6 col-12">
                             <div class="col-12 form-group">
                                 <input class="form-control register-form" type="text" name="username" id="register-username" placeholder="Username" required="required" maxlength="16">
@@ -61,10 +61,7 @@
                         <div class="col-12">
                             <input class="btn btn-primary" id="register-button" type="submit" value="Register" style="width:100%" disabled>
                         </div>
-                        <div class="col-12 message" id="register-message" style="display:none">
-                            {% if register_message %}
-                                {{ register_message }}
-                            {% endif %}
+                        <div class="col-12 message" id="register-message">
                         </div>
                     </div>
                 </div>

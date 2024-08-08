@@ -5,6 +5,53 @@ Leaderboard
 {% endblock %}
 
 {% block body %}
-Leaderboard
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h1>Leaderboard</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-10">
+            <div class="row justify-content-center" id="leaderboard-options">
+                <div class="col-2 text-center">
+                    Total
+                </div>
+                <div class="col-2 text-center">
+                    30s
+                </div>
+                <div class="col-2 text-center">
+                    60s
+                </div>
+                <div class="col-2 text-center">
+                    90s
+                </div>
+                <div class="col-2 text-center">
+                    120s
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center" >
+        <div class="col-lg-6 col-md-8 col-10">
+            <div class="row justify-content-around leaderboard-entry">
+                <div class="col-2">
+                    User
+                </div>
+                <div class="col-2">
+                    Qpm
+                </div>
+            </div>
+            <div class="row justify-content-around leaderboard-entry">
+                <div class="col-2">
+                    User
+                </div>
+                <div class="col-2">
+                    Qpm
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

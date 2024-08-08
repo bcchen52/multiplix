@@ -69,16 +69,19 @@ function disable_inputs(operation){
 }
 
 //TODO list 
+//Leckerki one// Long Cang Lovers Quarrel
 //if user...
 //-----full
 //leaderboard
-//user stats
+//user page
+//user page
 
 //-----backend
 //leaderboard models 
 
 //-----frontend
 //settings
+//test page
 
 
 //default settings 
@@ -133,12 +136,13 @@ Test.state = {
     specifications: [], 
     time: 0,
     timestamp: 0,
+    logged_in: false,
     is_default: true,
     a_times: [],
     s_times: [],
     m_times: [],
     d_times: [],
-    reset_test: (id, specifications, time, is_default) => {
+    reset_test: (id, specifications, time, is_default, logged_in) => {
         Test.state.test_id = id;
         Test.state.score = 0;
         Test.state.time = time;
@@ -149,6 +153,7 @@ Test.state = {
         Test.state.m_times = [];
         Test.state.d_times = [];
         Test.state.is_default = is_default;
+        Test.state.logged_in = logged_in;
     },
     correct: () => {
         Test.state.score++;
@@ -199,10 +204,12 @@ function results() {
     result.style.display = 'block';
     
     //console.log(incrementer == null);
-    console.log(`The score is ${Test.state.score}`);
-
     let qpm = Test.state.score / ((Test.state.time)/60);
     qpm = Math.round(qpm * 100) / 100;
+
+    const result_message = document.querySelector('.result-message');
+
+    console.log(`The score is ${Test.state.score}`);
 
     document.querySelector('#score').innerHTML = Test.state.score;
     console.log(document.querySelector('#score'));
@@ -212,7 +219,6 @@ function results() {
     average_times = get_average_times();
 
     qpm_div.innerHTML = qpm;
-
 
     //average times
     const addition_averages = document.querySelector('#addition-averages');
@@ -232,15 +238,31 @@ function results() {
 
     //warning message
 
-    console.log(document.querySelector('#logged_in').value == false);
-    const result_message = document.querySelector('.result-message');
+    //console.log(document.querySelector('#logged_in').value == false);
 
-    if (document.querySelector('#logged_in').value == "True") {
+    if (Test.state.logged_in) {
         if (!Test.state.is_default){
             result_message.innerHTML = "Play on default settings to save your scores.";
         } else {
             result_message.innerHTML = ""; 
         }
+
+        fetch(`/test/${Test.state.test_id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                score: Test.state.score,
+                qpm : qpm,
+                time: Test.state.time,
+                is_default: Test.state.is_default,
+            })
+        })
+        .then( response => response.json())
+        .then( result => {
+            console.log(result.message);
+            result_message.innerHTML = result.message;
+        });
+        
+
     } else {
         console.log("not logged in");
         result_message.innerHTML = `<p><a href="/login">Log in</a> to save your data and place on the leaderboards.</p>`;
@@ -285,39 +307,18 @@ function make_test() {
         })
         .then( response => response.json())
         .then( result => {
-            console.log(document.querySelector('#add_min_1').value);
-            console.log(result.test_id);
+            //console.log(result.logged_in);
             //test id, set count to that
             Count.state.new_test(result.test_id);
-            Test.state.reset_test(result.test_id, settings, time, is_def);
+            Test.state.reset_test(result.test_id, settings, time, is_def, result.logged_in);
             console.log(Test.state.specifications);
             generate_question();
         });
 
-        //console.log(test_id);
-
         document.querySelector("#answer").focus();
 
-        //question and result
-        //Create question + result
-        //If enter box == result...
-        //Question.state
-        //question() generate question, put it and result into state
-        //result() Give the input box the function based off question.state 
-
         //set time
-        Count.state.reset(1);
-
-
-        //idt i need this
-        if (!finish_test){
-            finish_test = setTimeout(() => {
-                console.log("done");
-            }, 3*1000)
-        }
-
-        clearTimeout(finish_test);
-        finish_test = null;
+        Count.state.reset(time);
 
         //console.log(timeoutId);
 
@@ -595,7 +596,7 @@ function get_average_times(){
             let raw_time = time.reduce((a, b) => a + b, 0) / time.length;
 
             //rounds to 0.00 if necessary
-            average_times.push(Math.round(raw_time * 100) / 100);
+            average_times.push(`${Math.round(raw_time * 100) / 100}s`);
         }
     })
     console.log(average_times);
