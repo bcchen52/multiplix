@@ -113,16 +113,20 @@
                     </div>
                 </div>
             </form>
-            <div class="row">
-                <div class="col-12 d-sm-flex d-none justify-content-center">
-                    <button type="button" class="btn btn-primary btn-lg btn-block" id="enter-button">
-                        Press <span class="key-button shadow">"Enter"</span> to start.
-                    </button>
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12 col-10">
+                    <div class="row justify-content-center settings-row shadow" id="default-button">
+                        <div class="col-12 text-center">
+                            Reset to Default Settings
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row justify-content-center settings-row" id="default">
-                <div class="d-flex justify-content-center my-auto">
-                    <button class="btn btn-primary default" type="button">Reset to Default Settings</button>
+            <div class="row">
+                <div class="col-12 d-sm-flex d-none justify-content-center">
+                    <div id="enter-button">
+                        Press <span class="key-button shadow">"Enter"</span> to start.
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,33 +135,50 @@
     
     <div class="container" id="test">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-10 justify-content-center">
-                <div class="col-6">
-                    <div id="counter">
-    
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div id="current-score">
-                    
-                    </div>
-                </div> 
-                <div class="col-auto">
-                    <div class="enter-button">Press <span class="escape-key bg-light shadow-lg">Esc</span> to exit</div>
-                </div>
-                <div class="col-12">
-                    <div id="question">
-                    
-                    </div>
-                </div>
-                <div class="col-8">
-    
-                    <input id="answer"autofocus>
-                </div>
-    
+            <div class="col-lg-6 col-10 justify-content-center">
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12 text-center test-heading">
+                                Time
+                            </div>
+                            <div class="col-12 text-center">
+                                <div class="test-number" id="counter">
             
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-12 text-center test-heading">
+                                Score
+                            </div>
+                            <div class="col-12 text-center">
+                                <div class="test-number" id="current-score">
+                        
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        <div id="question">
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-4 col-6">
+                        <input id="answer" autocomplete="off" autofocus>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <div id="enter-button">Press <span class="key-button shadow">Esc</span> to exit</div>
+                    </div>
+                </div>
             </div>
-            
         </div>
         
     </div>

@@ -4,7 +4,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt 
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 from .models import User, Profile, Test, Leaderboard
 
@@ -12,21 +13,24 @@ from .models import User, Profile, Test, Leaderboard
 
 # Create Leaderboards
 def create_leaderboards():
-    if not Leaderboard.objects.filter(name="Top QPM").exists:
-        top_qpm = Leaderboard(name="Top QPM")
+    if not Leaderboard.objects.filter(name="overall").exists():
+        print("made overall")
+        #change the length back to 100, this is just for testing
+        top_qpm = Leaderboard(name="overall", display_name="Top 100 QPM", length=100)
         top_qpm.save()
-    if not Leaderboard.objects.filter(name="Top QPM 30 Seconds").exists:
-        top_qpm = Leaderboard(name="Top QPM 30 Seconds")
+    if not Leaderboard.objects.filter(name="30").exists():
+        top_qpm = Leaderboard(name="30", display_name="Top 50 QPM for 30s")
         top_qpm.save()
-    if not Leaderboard.objects.filter(name="Top QPM 60 Seconds").exists:
-        top_qpm = Leaderboard(name="Top QPM 60 Seconds")
+    if not Leaderboard.objects.filter(name="60").exists():
+        top_qpm = Leaderboard(name="60", display_name="Top 50 QPM for 60s")
         top_qpm.save()
-    if not Leaderboard.objects.filter(name="Top QPM 120").exists:
-        top_qpm = Leaderboard(name="Top QPM 120 Seconds")
+    if not Leaderboard.objects.filter(name="120").exists():
+        top_qpm = Leaderboard(name="120", display_name="Top 50 QPM for 120s")
         top_qpm.save() 
-    if not Leaderboard.objects.filter(name="Top QPM 180").exists:
-        top_qpm = Leaderboard(name="Top QPM 180 Seconds")
+    if not Leaderboard.objects.filter(name="180").exists():
+        top_qpm = Leaderboard(name="180", display_name="Top 50 QPM for 180s")
         top_qpm.save() 
+    #print(Leaderboard.objects.all().count())
 
 create_leaderboards()
 
@@ -52,11 +56,9 @@ def login_view(request):
     else:
         return render(request, "multiplix/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -67,7 +69,6 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            print("pass dont match")
             return render(request, "multiplix/login.html", {
                 "register_message": "Passwords must match."
             })
@@ -77,7 +78,6 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            print("user_taken")
             return render(request, "multiplix/login.html", {
                 "register_message": "Username already taken."
             })
@@ -96,13 +96,44 @@ def profile(request, username):
         profile = Profile.objects.get(user=user)
     except Profile.DoesNotExist:
         return HttpResponseRedirect(reverse("index"))
+    
+    is_user = False
+    relative_user = user.username
+
+    if request.user.is_authenticated:
+        if request.user == user:
+            is_user = True
+            relative_user = "You've"
+
+    seconds = profile.total_time
+    formatted_time = f"{seconds} seconds"
+    if seconds > 60:
+        minutes = seconds // 60
+        seconds = seconds % 60
+        if minutes > 60:
+            hours = minutes // 60
+            minutes = minutes % 60
+            if hours > 24:
+                days = hours // 24
+                hours = hours % 24
+                formatted_time = f"{days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
+            else:
+                formatted_time = f"{hours} hours, {minutes} minutes and {seconds} seconds"
+        else:
+            formatted_time = f"{minutes} minutes and {seconds} seconds"
+
 
     return render(request, "multiplix/profile.html", {
+        "relative_user": relative_user,
         "best_overall": profile.best_overall, 
         "best_30": profile.best_30, 
         "best_60": profile.best_60, 
         "best_120": profile.best_120, 
         "best_180": profile.best_180, 
+        "total_time": formatted_time, 
+        "tests_taken": profile.tests_taken,
+        "date_created": profile.created,
+        "is_user": is_user,
     })
 
 def info(request):
@@ -114,8 +145,44 @@ def leaderboard(request):
     return render(request, "multiplix/leaderboard.html", {
     })
 
+def get_leaderboard(request, name, page):
+    #even though we don't use leaderboard, we check if it exists
+    try:
+        leaderboard = Leaderboard.objects.get(name=name)
+    except Leaderboard.DoesNotExist:
+        return JsonResponse({
+            "message": f"Leaderboard does not exist!",
+        }, status=404)
+    
+    values = order_leaderboard(name, "get")
+
+    p=Paginator(values, 5)
+    current_page = p.page(page)
+
+    next = prev = fwd = bwd = False
+    if current_page.has_next():
+        next = current_page.next_page_number()
+        if page < p.num_pages - 1:
+            fwd = page+2
+
+    if current_page.has_previous():
+        prev = current_page.previous_page_number()
+        if page > 2:
+            bwd = page-2
+
+    return JsonResponse({
+            "leaderboard": current_page.object_list,
+            "page_info": {
+                'next': next,
+                'prev': prev,
+                'fwd': fwd,
+                'bwd': bwd,
+                },
+            "display_name": leaderboard.display_name,
+        }, status=200)
+
 @csrf_exempt 
-def test(request, id):
+def test(request, id):  
     #finish test
     if request.method == 'PUT':
         test = Test.objects.get(id=id)
@@ -125,30 +192,30 @@ def test(request, id):
         #check profile
         if data["qpm"] > profile.best_overall:
             profile.best_overall = data["qpm"]
-        if data["time"] == 30:
+        if test.time == 30:
             if data["qpm"] > profile.best_30:
                 profile.best_30 = data["qpm"]
-        if data["time"] == 60:
+        if test.time == 60:
             if data["qpm"] > profile.best_60:
                 profile.best_60 = data["qpm"]
-        if data["time"] == 120:
+        if test.time == 120:
             if data["qpm"] > profile.best_120:
                 profile.best_120 = data["qpm"]
-        if data["time"] == 180:
+        if test.time == 180:
             if data["qpm"] > profile.best_180:
                 profile.best_180 = data["qpm"]
         
+        profile.total_time = profile.total_time + int(data["time"])
+        profile.tests_taken += 1
         profile.save()
 
+        test.qpm = data["qpm"]
+        test.save()
 
-        #put all values 
-        #save test
-        #if it is user's personal best or leaderboard, don't kill it
-        # else kill it 
-        #clear all empty tests
-        #
+        update_leaderboards(id)
+
         return JsonResponse({
-            "message": "Post updated!"
+            "message": "Test finished"
         }, status=200)
 
 @csrf_exempt 
@@ -157,7 +224,7 @@ def create_test(request):
     if request.method == 'POST':
         #create test, return testid
         data = json.loads(request.body)
-        #print(data)
+
         if request.user.is_authenticated:
             current_user = request.user
         else:
@@ -170,12 +237,65 @@ def create_test(request):
             "logged_in": request.user.is_authenticated,
         }, status=400)
 
+def update_leaderboards(test_id):
+    try:
+        all_leaderboards = Leaderboard.objects.all()
+    except Leaderboard.DoesNotExist:
+        return JsonResponse({
+                "message": "Leaderboards do not exist"
+            }, status=404)
+    try:
+        test = Test.objects.get(id=test_id)
+    except Test.DoesNotExist:
+        return JsonResponse({
+                "message": "Test does not exist"
+            }, status=404)
+    
+    for leaderboard in all_leaderboards:
+        if test.qpm > 0:
+            #it is important to call "overall" first, as it is either overall or a number, and int() only works on the number strings.
+            if leaderboard.name=="overall" or int(leaderboard.name) == test.time:
+                if leaderboard.tests.count() < leaderboard.length:
+                    leaderboard.tests.add(test)
+                    leaderboard.save()
+                    #print(f"{leaderboard.name} is now at {leaderboard.tests.count()}")
+                elif test.qpm > leaderboard.min_value:
+                    replace_leaderboard(leaderboard.name, test_id)
 
-def update_leaderboards(test):
-    #first, check if the leaderboards are less than 50
-        #get leaderboard
-    #else, check if test qpm is greater than the lowest value
-    #if so, loop through
-    #find a way to loop thru all leaderboards
-        #get a field called time, let overall be 0
-    pass
+def replace_leaderboard(name, test_id):
+    leaderboard = Leaderboard.objects.get(name=name)
+    test = Test.objects.get(id=test_id)
+
+    #get minimum test
+    #We need to filter because there can be multiple tests with the same qpm. If this function is called there will ALWAYS be at least one test that satisfies the following condition
+    minimum_test = leaderboard.tests.filter(qpm=leaderboard.min_value)[0]
+
+    leaderboard.tests.remove(minimum_test)
+    leaderboard.tests.add(test)
+    #print(f"{minimum_test} was removed and replaced with {test}")
+
+    #order_leaderboard with "replace" defines a leaderboard's new minimum
+    order_leaderboard(name, "replace")
+
+#take a leaderboard object, and turn it into an array and order it by qpm, descending
+def order_leaderboard(name, method):
+    test_array = []
+    leaderboard = Leaderboard.objects.get(name=name)
+
+    #populate array
+    for test in leaderboard.tests.all():
+        test_array.append({ "name" : test.user.username, "qpm" : test.qpm, "place": 0})
+
+    sorted_array = sorted(test_array, key=lambda d: d['qpm'], reverse=True)
+    #print(sorted_array[leaderboard.tests.count()-1]["qpm"])
+
+    for x in range(leaderboard.tests.count()):
+        sorted_array[x]["place"] = x+1
+
+    if method == "replace":
+        #resets minimum value
+        leaderboard.min_value = sorted_array[leaderboard.tests.count()-1]["qpm"]
+        #print(f"Min is now {leaderboard.min_value}")
+        leaderboard.save()
+    elif method == "get":
+        return(sorted_array)

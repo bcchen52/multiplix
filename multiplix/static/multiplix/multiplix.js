@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.querySelector('.default').onclick = () => {
+    document.querySelector('#default-button').onclick = () => {
         document.querySelector('#addition-switch').checked = default_settings[0];
         document.querySelector('#add_min_1').value = default_settings[1];
         document.querySelector('#add_max_1').value = default_settings[2];
@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log('default clicked');
     }
-
-    //default button
 });
 
 function disable_inputs(operation){
@@ -77,7 +75,6 @@ function disable_inputs(operation){
 //user page
 
 //-----backend
-//leaderboard models 
 
 //-----frontend
 //settings
@@ -270,6 +267,9 @@ function results() {
 }
 function make_test() {
     //hide message block within the test container, reactived if incorrect settings
+
+    //clear input field
+    document.querySelector('#answer').value = "";
 
     const time = get_time();
     
@@ -474,6 +474,8 @@ function display_question(equation, result, eq_type){
     const question = document.querySelector('#question');
     //console.log(question);
     question.innerHTML = equation;
+    document.querySelector('#question').animate([{opacity: '0', right: '-20%'},{opacity : '1', right: '0%'}],{duration:100,})
+
 
     const score = document.querySelector('#current-score');
     score.innerHTML = Test.state.score;

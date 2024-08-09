@@ -7,7 +7,7 @@ class User(AbstractUser):
 class Test(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)
-    qpm = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    qpm = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True)
     default = models.BooleanField(default=True)
     time=models.IntegerField(default=120)
     average_time = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
@@ -22,9 +22,10 @@ class Test(models.Model):
             return "No user"
 
     def __str__(self):
-        return f"{self.user} and test {self.id} with a score of {self.score}."
+        return f"{self.user} and test {self.id} with a score of {self.score} and a qpm of {self.qpm}."
     
 class Profile(models.Model):
+    created = models.DateField(auto_now_add=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_time = models.IntegerField(default=0)
     tests_taken = models.IntegerField(default=0)
@@ -38,8 +39,11 @@ class Profile(models.Model):
         return self.user
 
 class Leaderboard(models.Model):
-    tests = models.ManyToManyField(Test, null=True, blank=True, related_name="leaderboard")
-    name = models.CharField(max_length=32, default="name")
+    tests = models.ManyToManyField(Test, related_name="leaderboard")
+    name = models.CharField(max_length=16, default="name")
+    display_name = models.CharField(max_length=32, default="display_name")
+    length = models.IntegerField(default=50)
+    min_value = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
     def __str__(self):
         return self.name

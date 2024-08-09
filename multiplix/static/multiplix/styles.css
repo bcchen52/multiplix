@@ -2,17 +2,67 @@ body {
     font-family: 'Poppins';
 }
 
-
 h1 {
     margin-top: 30px;
 }
+
+input {
+    border-radius: 5px;
+    border-width: 1px;
+}
+
 .body {
     margin-left:5%;
     margin-right:5%;
 }
 
+@keyframes load{
+    0%{
+        opacity: 0%;
+        right: 50%;
+    }
+
+    100% {
+        opacity: 100%;
+        right: 0%;
+    }
+}
+
+.question {
+    position:relative;
+}
+
+#leaderboard-title{
+    position:relative;
+}
+
 .form-group {
     margin-bottom:5px;
+}
+
+#test {
+    margin-top: 50px;
+}
+
+#answer {
+    font-size:30px;
+    width: 100%;
+}
+
+.test-number {
+    font-size: 40px;
+    font-weight: bold;
+    color: purple;
+}
+
+.test-heading {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#question {
+    font-size: 80px;
+    font-weight: bold;
 }
 
 .navbar {
@@ -32,11 +82,16 @@ hr {
 }
 
 .leaderboard-entry {
+    position:relative;
     background-color: gray;
     padding-top:10px;
     padding-bottom:10px;
     border-radius: 10px;
     margin-bottom: 10px;
+}
+
+.leaderboard-entry:hover {
+    background-color: #CBC3E3;
 }
 
 #leaderboard-options {
@@ -65,6 +120,8 @@ hr {
 }
 
 #enter-button {
+    margin-top:20px;
+    margin-bottom:20px;
     font-size:30px;
     border-color: white;
     background-color:white;
@@ -99,4 +156,52 @@ hr {
     margin-top: 5px;
     font-size:15px;
     font-weight: bold;
+}
+
+.leaderboard-button {
+    background-color: gray;
+    margin:5px;
+    border-radius:5px;
+}
+
+.leaderboard-button-active {
+    background-color: purple;
+}
+
+.place-sign {
+    font-size: 20px;
+}
+
+.profile-info {
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.page-button {
+    background-color: #CBC3E3;
+    border-radius: 5px;
+    width:45px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 20px;
+    position: relative;
+}
+
+.page-button-mute {
+    opacity:60%;
+}
+
+.leaderboard-entry-empty {
+    visibility: hidden;
+}
+
+#current {
+    background-color: #5D3FD3;
+}
+
+#default-button:hover{
+    background-color: #CBC3E3;
+    cursor: pointer;
 }
