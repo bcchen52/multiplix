@@ -100,10 +100,14 @@ def profile(request, username):
     is_user = False
     relative_user = f"{user.username} has"
 
+
+    print(request.user.is_authenticated)
     if request.user.is_authenticated:
         if request.user == user:
             is_user = True
             relative_user = "You have"
+
+    
 
     seconds = profile.total_time
     formatted_time = f"{seconds} seconds"
@@ -124,7 +128,6 @@ def profile(request, username):
 
 
     return render(request, "multiplix/profile.html", {
-        "user": user.username,
         "relative_user": relative_user,
         "best_overall": profile.best_overall, 
         "best_30": profile.best_30, 

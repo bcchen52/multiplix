@@ -57,24 +57,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //triggered a keydown with a button
     //because there's two buttons
-    document.querySelector('#enter').onclick = () => {
-        let enterEvent = new KeyboardEvent("keydown", {
-            key: "Enter",
-            keyCode: 13,
-            which: 13
-        });
-        document.dispatchEvent(enterEvent);
-    }
+    document.querySelectorAll('#enter').forEach((button) => {
+        button.onclick = () => {
+            let enterEvent = new KeyboardEvent("keydown", {
+                key: "Enter",
+                keyCode: 13,
+                which: 13
+            });
+            document.dispatchEvent(enterEvent);
+        }
+    });
 
-
-    document.querySelector('#escape').onclick = () => {
-        let escEvent = new KeyboardEvent("keydown", {
-            key: "Escape",
-            keyCode: 27,
-            which: 27
-          });
-        document.dispatchEvent(escEvent);
-    }
+    document.querySelectorAll('#escape').forEach((button) => {
+        button.onclick = () => {
+            let escEvent = new KeyboardEvent("keydown", {
+                key: "Escape",
+                keyCode: 27,
+                which: 27
+              });
+            document.dispatchEvent(escEvent);
+        }
+    });
 
     document.querySelector('#default-button').onclick = set_default;
 });
@@ -273,7 +276,6 @@ function results() {
                     qpm : qpm,
                     time: Test.state.time,
                     is_default: Test.state.is_default,
-                    csrfmiddlewaretoken: $('#csrf-helper input[name="csrfmiddlewaretoken"]').attr('value')
                 }),
                 mode: 'same-origin',
             })
