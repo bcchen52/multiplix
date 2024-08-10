@@ -37,17 +37,15 @@ The JavaScript file only works to select the navbar link and set it to active.
 The info page is basic information, JavaScript file serves same purpose as profile's. 
 
 ## Backend
-In terms of complexity on the backend with models, my project uses Profile, Leaderboard, and Test models. 
+`models.py` and `views.py`.
 
-### models.py and views.py
-
-#### Test()
+### `Test()`
 A Test object is created everytime a user starts a test , including information about the duration of test, the test settings/options, and whether the test has default settings. When this is called, all Test objects without a user associated are deleted. Once a test is finished and the user is logged in, a "PUT" request is made, providing information about a user's QPM, questions per minute, which is how scores are measured. This data is then used to update a user's personal bests and update the leaderboards(if applicable).
 
-#### Leaderboard()
+### `Leaderboard()`
 Five Leaderboard objects are created (overall, 30s, 60s, 120s, 180s) at the beginning of the views.py file if they do not already exist. Leaderboard has a ManyToMany relationship with Test. Whenever a test is finished, if the test falls into the leaderboard category and the leaderboard is not at its maximum length, it will automatically add test. If the leaderboard is full, it will compare it to the minimum value, and if the test's QPM is greater, `replace_leaderboard` is called. This finds the test that the minimum value belonged to, removes that test, deletes the test, and adds the next test. Then, `order_leaderboard(..., "replace")` is called, which turns the QuerySet of Test objects into an array of dictionaries, which is then reverse indexed into descending order based on QPM, and since "replace" was passed as a parameter, the minimum value of the leaderboard will be updated based on this ordering. This is the same method that returns an ordered array to display leaderboards.
 
-#### Profile()
+### `Profile()`
 Profile objects are created whenever a User is created. Profile is updated whenever a user finishes a test.
 
 ## How to Run
