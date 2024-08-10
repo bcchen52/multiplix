@@ -21,30 +21,36 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand navbar-light">
-            <div class="container-fluid">
-                <a class="navbar-brand leckerli-one-regular nav-clickable " href="{% url 'index' %}" id="main">MultipliX</a>
-                
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav me-auto mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link nav-clickable" href="{% url 'leaderboard' %}" id="leaderboard">Leaderboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-clickable" href="{% url 'info' %}" id="info">Info</a>
-                        </li>
-                    </ul>
-                    
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10 col-12">
+                    <nav class="navbar navbar-expand navbar-light">
+                        <div class="container-fluid">
+                            <a class="navbar-brand leckerli-one-regular nav-clickable " href="{% url 'index' %}" id="main">MultipliX</a>
+                            
+                            <div class="collapse navbar-collapse" id="navbarText">
+                                <ul class="navbar-nav me-auto mb-lg-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-clickable" href="{% url 'leaderboard' %}" id="leaderboard">Leaderboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link nav-clickable" href="{% url 'info' %}" id="info">Info</a>
+                                    </li>
+                                </ul>
+                                
+                            </div>
+                            <span class="navbar-text">
+                                {% if user.is_authenticated %}
+                                    <a class="nav-link nav-clickable" href="{% url 'profile' user.username %}" id="profile">Profile</a>
+                                    {% else %}
+                                    <a class="nav-link nav-clickable" href="{% url 'login' %}" id="login">Login</a>
+                                    {% endif %}
+                            </span>
+                        </div>
+                    </nav>
                 </div>
-                <span class="navbar-text">
-                    {% if user.is_authenticated %}
-                        <a class="nav-link nav-clickable" href="{% url 'profile' user.username %}" id="profile">Profile</a>
-                        {% else %}
-                        <a class="nav-link nav-clickable" href="{% url 'login' %}" id="login">Login</a>
-                        {% endif %}
-                </span>
             </div>
-        </nav>
+        </div>
         <div class="body">
         {% block body %}
         {% endblock %}
