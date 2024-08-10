@@ -6,12 +6,9 @@ class User(AbstractUser):
 
 class Test(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    score = models.IntegerField(null=True, blank=True)
     qpm = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True)
     default = models.BooleanField(default=True)
     time=models.IntegerField(default=120)
-    average_time = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    best = models.BooleanField(default=False, blank=True)
     add = models.BooleanField()
     mult = models.BooleanField()
 

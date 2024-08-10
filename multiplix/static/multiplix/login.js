@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    //navbar
+    document.querySelector("#login").classList.add('nav-link-active');
+    
     const message = document.querySelector('#register-message');
 
     const register_button = document.querySelector("#register-button");

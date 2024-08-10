@@ -1,4 +1,5 @@
 {% extends "multiplix/layout.html" %}
+{% load static %}
 
 {% block title %}
 <title>
@@ -9,11 +10,37 @@
 {% block body %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-auto">
-            <h1>Multiplix Math Game</h1>
-            More <a href="https://brianchen.org">here.</a>
+        <div class="col-auto leckerli-one-regular info-title">
+            MultipliX
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-10 info info-main text-center">
+            <span class="highlight">MultipliX</span> is a mental math game that allows you to practice and test your arithmetic ability. 
+            <span class="highlight">MultipliX</span> introduces the convenience and customizability of traditional typing tests to the world of math.
+        </div>
+        <div class="col-10 info info-heading">
+            <h2>What is QPM?</h2>
+            <hr>
+        </div>
+        <div class="col-10 info">
+            <span class="highlight-2">QPM</span> stands for <span class="highlight-2">Questions Per Minute</span>, similar to how WPM, Words Per Minute, measures performance used on typing tests.
+            <br>
+            <br>
+            QPM is used rather than a raw score to provide a uniform way to measure performance. There are also leaderboards for each specific time option.
+        </div>
+        <div class="col-10 info info-heading">
+            <h2>How do I compete with others?</h2>
+            <hr>
+        </div>
+        <div class="col-10 info">
+            In order to have your scores displayed in your profile or ranked on the leaderboards, you must play with default settings. These settings are loaded in by default, and can be re-selected with the <span class="highlight-2">Reset to Default Settings.</span> button.
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'multiplix/info.js' %}"></script>
 {% endblock %}

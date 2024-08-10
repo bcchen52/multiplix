@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector("#main").classList.add('navbar-brand-active');
     home();
+    set_default();
+    set_time("time-120");
     //start test, only works if test hasn't been started, which is indicated if incrementer is null
     document.addEventListener("keydown", event => {
         if (event.key === "Enter") {
-            console.log('enter clicked');
+            //console.log('enter clicked');
             if (incrementer == null) {
                 console.log("test started");
                 make_test();
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //load homescreen and exit test
     document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
-            console.log("back to home");
+            //console.log("back to home");
             home();
     }});
  
@@ -33,35 +36,81 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.querySelector('#default-button').onclick = () => {
-        document.querySelector('#addition-switch').checked = default_settings[0];
-        document.querySelector('#add_min_1').value = default_settings[1];
-        document.querySelector('#add_max_1').value = default_settings[2];
-        document.querySelector('#add_min_2').value = default_settings[3];
-        document.querySelector('#add_max_2').value = default_settings[4];
-        document.querySelector('#multiplication-switch').checked = default_settings[5];
-        document.querySelector('#mult_min_1').value = default_settings[1];
-        document.querySelector('#mult_max_1').value = default_settings[2];
-        document.querySelector('#mult_min_2').value = default_settings[3];
-        document.querySelector('#mult_max_2').value = default_settings[4];
+    document.querySelectorAll('.time-options').forEach((button) => {
+        button.onclick = () => {
+            set_time(button.id);
+        }
+    })
 
-        disable_inputs('add');
-        disable_inputs('mult');
+    //limit the length in the settings input field, 4 for addition, 3 for multiplication
+    document.querySelectorAll('.num-input').forEach((input) => {
+        input.oninput = () => {
+            let max_len = 3;
+            if (input.id.includes("add")){
+                max_len = 4;
+            }
+            if (input.value.length > max_len){
+                input.value = input.value.slice(0,max_len)
+            }
+        }
+    });
 
-        console.log('default clicked');
+    //triggered a keydown with a button
+    //because there's two buttons
+    document.querySelector('#enter').onclick = () => {
+        let enterEvent = new KeyboardEvent("keydown", {
+            key: "Enter",
+            keyCode: 13,
+            which: 13
+        });
+        document.dispatchEvent(enterEvent);
     }
+
+
+    document.querySelector('#escape').onclick = () => {
+        let escEvent = new KeyboardEvent("keydown", {
+            key: "Escape",
+            keyCode: 27,
+            which: 27
+          });
+        document.dispatchEvent(escEvent);
+    }
+
+    document.querySelector('#default-button').onclick = set_default;
 });
+
+function set_default(){
+    document.querySelector('#addition-switch').checked = default_settings[0];
+    document.querySelector('#add_min_1').value = default_settings[1];
+    document.querySelector('#add_max_1').value = default_settings[2];
+    document.querySelector('#add_min_2').value = default_settings[3];
+    document.querySelector('#add_max_2').value = default_settings[4];
+    document.querySelector('#multiplication-switch').checked = default_settings[5];
+    document.querySelector('#mult_min_1').value = default_settings[6];
+    document.querySelector('#mult_max_1').value = default_settings[7];
+    document.querySelector('#mult_min_2').value = default_settings[8];
+    document.querySelector('#mult_max_2').value = default_settings[9];
+
+    disable_inputs('add');
+    disable_inputs('mult');
+}
+
+function set_time(id) {
+    document.querySelectorAll('.time-options').forEach((button) => {
+        button.classList.remove('time-option-active');
+    })
+
+    document.querySelector(`#${id}`).classList.add('time-option-active');
+}
 
 function disable_inputs(operation){
     if (sign_clicked(operation)){
         document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
             input.disabled = false;
-            console.log("undisabled");
         });
     } else {
         document.querySelectorAll(`.${operation}-input`).forEach((input)=>{
             input.disabled = true;
-            console.log("disabled");
         });
     }
 }
@@ -82,7 +131,7 @@ function disable_inputs(operation){
 
 
 //default settings 
-const default_settings = [true, 12, 99, 5, 12, true, 12, 99, 5, 12];
+const default_settings = [true, 12, 100, 12, 100, true, 5, 12, 12, 99];
 
 var incrementer = null;
 //this is the counter
@@ -102,9 +151,7 @@ Count.state = {
     increment: () => {
         if (Count.state.count > 0) {
             setState(() => Count.state.count--);
-            console.log(Count.state.count);
         } else {
-            console.log(Count.state.test_id);
             clearInterval(incrementer);
             results();
         }
@@ -156,8 +203,6 @@ Test.state = {
         Test.state.score++;
     },
     new_time: (equation_type, time) => {
-        //console.log(equation_type);
-        //console.log(`${Test.state.timestamp} - ${time} = ${Test.state.timestamp-time}`)
         if (equation_type == "addition") {
             Test.state.a_times.push(Test.state.timestamp-time);
         } else if (equation_type == "subtraction") {
@@ -169,26 +214,6 @@ Test.state = {
         }
         Test.state.timestamp = time;
     }
-}
-
-//kill this function?
-function make_home() {
-    incrementer = null;
-    const home = document.querySelector("#home");
-    home.style.display = 'block';
-    const test = document.querySelector("#test");
-    test.style.display = 'none';
-    const result = document.querySelector("#results");
-    result.style.display = 'none';
-    
-
-    const settings = document.createElement('div');
-    settings.setAttribute('id', 'settings');
-    settings.setAttribute('class', 'row justify-content-center');
-
-    //home.appendChild(home_wrapper);
-
-    //when one is selected, deselect all others
 }
 
 function results() {
@@ -205,11 +230,12 @@ function results() {
     qpm = Math.round(qpm * 100) / 100;
 
     const result_message = document.querySelector('.result-message');
+    const result_col = document.createElement('div');
+    result_col.setAttribute('class', 'col-lg-7 col-md-8 col-sm-10 col-12 text-sm-start text-center');
 
-    console.log(`The score is ${Test.state.score}`);
+    //console.log(`The score is ${Test.state.score}`);
 
     document.querySelector('#score').innerHTML = Test.state.score;
-    console.log(document.querySelector('#score'));
 
     const qpm_div = document.querySelector('#qpm');
 
@@ -233,36 +259,41 @@ function results() {
         document.querySelector('#div-avg').innerHTML = average_times[3];
     } 
 
-    //warning message
-
-    //console.log(document.querySelector('#logged_in').value == false);
-
     if (Test.state.logged_in) {
         if (!Test.state.is_default){
-            result_message.innerHTML = "Play on default settings to save your scores.";
+            result_col.innerHTML = "Play on default settings to save your scores.";
+            result_message.appendChild(result_col);
         } else {
-            result_message.innerHTML = ""; 
-        }
-
-        fetch(`/test/${Test.state.test_id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                score: Test.state.score,
-                qpm : qpm,
-                time: Test.state.time,
-                is_default: Test.state.is_default,
+            const csrftoken = getCookie('csrftoken');
+            fetch(`/test/${Test.state.test_id}`, {
+                method: 'PUT',
+                headers: {'X-CSRFToken': csrftoken},
+                body: JSON.stringify({
+                    score: Test.state.score,
+                    qpm : qpm,
+                    time: Test.state.time,
+                    is_default: Test.state.is_default,
+                    csrfmiddlewaretoken: $('#csrf-helper input[name="csrfmiddlewaretoken"]').attr('value')
+                }),
+                mode: 'same-origin',
             })
-        })
-        .then( response => response.json())
-        .then( result => {
-            console.log(result.message);
-            result_message.innerHTML = result.message;
-        });
-        
-
+            .then( response => response.json())
+            .then( result => {
+                //console.log(result.message);
+                if (result.message.length > 0){
+                    result.message.forEach((msg) => {
+                        const result_container = document.createElement('div');
+                        result_container.setAttribute('class', 'col-lg-7 col-md-8 col-sm-10 col-12 text-sm-start text-center');
+                        result_container.innerHTML = msg;
+                        //console.log("created");
+                        result_message.appendChild(result_container);
+                    });
+                }
+            });
+        }
     } else {
-        console.log("not logged in");
-        result_message.innerHTML = `<p><a href="/login">Log in</a> to save your data and place on the leaderboards.</p>`;
+        result_col.innerHTML = `<p><a href="/login">Log in</a> to save your data and place on the leaderboards.</p>`;
+        result_message.appendChild(result_col);
     };
 }
 function make_test() {
@@ -276,13 +307,13 @@ function make_test() {
     //run validate settings
     let settings_info = validate_settings();
     const settings = settings_info[1];
-    console.log(settings_info[2]);
+    //console.log(settings_info[2]);
 
     const error = document.querySelector("#settings-error");
     error.style.display = 'none';
 
     if (settings_info[0]) {
-        console.log("test start");
+        //console.log("test start");
 
         let is_def = is_default(settings);
         //hide error message
@@ -295,15 +326,19 @@ function make_test() {
 
         //save settings in test() function, send to test
 
+        const csrftoken = getCookie('csrftoken');
+
         //after test completed, complete the test
         fetch(`/test`, {
             method: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
             body: JSON.stringify({
                 time: time,
                 add: settings[0],
                 mult: settings[5],
                 is_default: is_def,
-            })
+            }),
+            mode: 'same-origin',
         })
         .then( response => response.json())
         .then( result => {
@@ -311,7 +346,7 @@ function make_test() {
             //test id, set count to that
             Count.state.new_test(result.test_id);
             Test.state.reset_test(result.test_id, settings, time, is_def, result.logged_in);
-            console.log(Test.state.specifications);
+            //console.log(Test.state.specifications);
             generate_question();
         });
 
@@ -328,7 +363,6 @@ function make_test() {
 
         //increment
     } else {
-        console.log('no test');
         error.innerHTML = settings_info[2];
         error.style.display = 'block';
     }
@@ -346,8 +380,7 @@ function home() {
 
     clearInterval(incrementer);
     incrementer = null;
-    console.log("incrementer emptied");
-
+    //console.log("incrementer emptied");
 }
 
 function generate_question(){
@@ -358,11 +391,11 @@ function generate_question(){
     let term2 = 0;
     let sign = 'None'
     if (add[0]) {
-        console.log('add true');
+        //console.log('add true');
         term1 = random_num(add[1], add[2]);
         term2 = random_num(add[3], add[4]);
         if (mult[0]){
-            console.log(mult[0]);
+            //console.log(mult[0]);
             //if both
             if (Math.random() < 0.5) {
                 //mult
@@ -393,7 +426,7 @@ function generate_question(){
             }
         }
     } else {
-        console.log(mult[0]);
+        //console.log(mult[0]);
         term1 = random_num(mult[1], mult[2]);
         term2 = random_num(mult[3], mult[4]);
         if (Math.random() < 0.5) {
@@ -403,16 +436,10 @@ function generate_question(){
             sign = "division";
         }
     }
-
-    console.log(sign);
-
     equation = make_equation((term1), (term2), sign);
 
     //equation[0] is the question, equation[1] is the result
-    console.log(`${equation[0]} = ${equation[1]}`);
-
-    //set the state
-    //display_question();
+    //console.log(`${equation[0]} = ${equation[1]}`);
 
     display_question(equation[0], equation[1], equation[2]);
 }
@@ -429,7 +456,7 @@ function make_equation(a, b, eq_type){
     let result = 0;
     let term1 = 0;
     let term2 = 0;
-    let sign = "*";
+    let sign = "&times;";
     if (eq_type === 'division'){
         let term3 = a * b;
         term1 = term3;
@@ -440,7 +467,7 @@ function make_equation(a, b, eq_type){
             result = b;
             term2 = a;
         }
-        sign = "/";
+        sign = "&divide;";
     } else if (eq_type === 'addition'){
         result = a + b;
         term1 = a;
@@ -462,15 +489,12 @@ function make_equation(a, b, eq_type){
         term1 = a;
         term2 = b;
     }
-    console.log(`${a} + ${b}`);
+    //console.log(`${a} + ${b}`);
     equation = `${term1} ${sign} ${term2}`;
     return [equation, result, eq_type];
 }
 
-
 function display_question(equation, result, eq_type){
-    //console.log(display_question.caller);
-
     const question = document.querySelector('#question');
     //console.log(question);
     question.innerHTML = equation;
@@ -488,19 +512,16 @@ function display_question(equation, result, eq_type){
             input.value = "";
             Test.state.correct();
             Test.state.new_time(eq_type, Count.state.count);
-            console.log(`The time is ${Count.state.count}`);
             generate_question();
         }
     }
-    //generate_question();
 }
 
 function get_time(){
     let time = 120;
     document.querySelectorAll('.time-options').forEach((option)=> {
-        if (option.checked){
-            console.log(option.value);
-            time = option.value;
+        if (option.classList.contains('time-option-active')){
+            time = option.innerHTML.slice(0,-1);
         }
     });
     return time;
@@ -544,10 +565,8 @@ function validate_settings(){
     const add = sign_clicked('add');
     const mult = sign_clicked('mult');
 
-    const settings = [add, add_min_1, add_max_1, add_min_2, add_max_2, mult, mult_min_1, mult_max_1, mult_min_2, mult_max_2]
-
-    console.log(settings);
-    //console.log("running");
+    const settings = [add, add_min_1, add_max_1, add_min_2, add_max_2, mult, mult_min_1, mult_max_1, mult_min_2, mult_max_2];
+    //console.log(settings);
     
     if (add){
         //first, check if numeric
@@ -556,7 +575,7 @@ function validate_settings(){
                 is_valid = false;
                 error_message = "Invalid Input";
             } 
-        })
+        });
 
         //then, check the range of the numbers
         if (is_valid){
@@ -601,8 +620,6 @@ function get_average_times(){
             average_times.push(`${Math.round(raw_time * 100) / 100}s`);
         }
     })
-    console.log(average_times);
-
     return average_times;
 }
 
@@ -620,4 +637,21 @@ function end_test(){
     //clear counters and timers 
     clearTimeout(finish_test);
     finish_test = null;
+}
+
+//taken from Django's website
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

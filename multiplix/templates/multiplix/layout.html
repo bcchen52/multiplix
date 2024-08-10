@@ -5,38 +5,42 @@
     <head>
         {% block title %}
         <title>
-            Multiplix
+            MultipliX
         </title>
         {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{% static 'multiplix/favicons/favicon.ico' %}">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap" rel="stylesheet">
         <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-        <link href="{% static 'multiplix/styles.css' %}" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="{% static 'multiplix/styles.css' %}" rel="stylesheet">        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         {% block js %}
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand navbar-light bg-light">
+        <nav class="navbar navbar-expand navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'index' %}">Multiplix</a>
+                <a class="navbar-brand leckerli-one-regular nav-clickable " href="{% url 'index' %}" id="main">MultipliX</a>
                 
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-lg-0">
                         <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
+                            <a class="nav-link nav-clickable" href="{% url 'leaderboard' %}" id="leaderboard">Leaderboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'info' %}">Info</a>
+                            <a class="nav-link nav-clickable" href="{% url 'info' %}" id="info">Info</a>
                         </li>
                     </ul>
                     
                 </div>
                 <span class="navbar-text">
                     {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'profile' user.username %}">Profile</a>
+                        <a class="nav-link nav-clickable" href="{% url 'profile' user.username %}" id="profile">Profile</a>
                         {% else %}
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link nav-clickable" href="{% url 'login' %}" id="login">Login</a>
                         {% endif %}
                 </span>
             </div>
@@ -44,7 +48,45 @@
         <div class="body">
         {% block body %}
         {% endblock %}
+
         </div>
+        <footer class="text-center text-white">
+            <div class="container">
+                <div class="text-center p-3 text-white">
+                    Contact Me @ <span class="highlight-2"><a href="mailto:bcchen52@gmail.com" target="_blank" rel="noopener noreferrer" class="footer-text">
+                        bcchen52@gmail.com
+                    </a></span>
+                </div>
+                <div class="text-center p-2 text-white">
+                    More @ <a href="https://brianchen.org" target="_blank" rel="noopener noreferrer" class="footer-text">
+                        <span class="highlight">brianchen.org</span>
+                    </a>
+                </div>
+                <section class="text-center p-2">
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <a href="mailto:bcchen52@gmail.com" target="_blank" rel="noopener noreferrer" class="text-white">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a href="https://www.linkedin.com/in/brian-chen-261748288/" target="_blank" rel="noopener noreferrer" class="text-white">
+                            <i class="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a href="https://github.com/bcchen52" target="_blank" rel="noopener noreferrer" class="text-white">
+                            <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <div class="text-center p-3">
+                © 2024 <span class="leckerli-one-regular">MultipliX</span>
+                </div>
+            </div>
+        </footer>
+        <script src="{% static 'multiplix/layout.js' %}"></script>        
     </body>
 
 </html>

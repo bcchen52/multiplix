@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator
 
 from .models import User, Profile, Test, Leaderboard
@@ -98,12 +98,12 @@ def profile(request, username):
         return HttpResponseRedirect(reverse("index"))
     
     is_user = False
-    relative_user = user.username
+    relative_user = f"{user.username} has"
 
     if request.user.is_authenticated:
         if request.user == user:
             is_user = True
-            relative_user = "You've"
+            relative_user = "You have"
 
     seconds = profile.total_time
     formatted_time = f"{seconds} seconds"
@@ -124,6 +124,7 @@ def profile(request, username):
 
 
     return render(request, "multiplix/profile.html", {
+        "user": user.username,
         "relative_user": relative_user,
         "best_overall": profile.best_overall, 
         "best_30": profile.best_30, 
@@ -181,7 +182,7 @@ def get_leaderboard(request, name, page):
             "display_name": leaderboard.display_name,
         }, status=200)
 
-@csrf_exempt 
+@csrf_protect
 def test(request, id):  
     #finish test
     if request.method == 'PUT':
@@ -189,21 +190,28 @@ def test(request, id):
         data = json.loads(request.body)
         profile = Profile.objects.get(user=test.user)
 
+        message = []
+
         #check profile
         if data["qpm"] > profile.best_overall:
             profile.best_overall = data["qpm"]
+            message.append("You set a new personal record for <span class='personal-message'>Overall QPM</span>.")
         if test.time == 30:
             if data["qpm"] > profile.best_30:
                 profile.best_30 = data["qpm"]
+                message.append("You set a new personal record for <span class='personal-message'>QPM on 30s</span>.")
         if test.time == 60:
             if data["qpm"] > profile.best_60:
                 profile.best_60 = data["qpm"]
+                message.append("You set a new personal record for <span class='personal-message'>QPM on 60s</span>.")
         if test.time == 120:
             if data["qpm"] > profile.best_120:
                 profile.best_120 = data["qpm"]
+                message.append("You set a new personal record for <span class='personal-message'>QPM on 120s</span>.")
         if test.time == 180:
             if data["qpm"] > profile.best_180:
                 profile.best_180 = data["qpm"]
+                message.append("You set a new personal record for <span class='personal-message'>QPM on 180s</span>.")
         
         profile.total_time = profile.total_time + int(data["time"])
         profile.tests_taken += 1
@@ -212,15 +220,30 @@ def test(request, id):
         test.qpm = data["qpm"]
         test.save()
 
-        update_leaderboards(id)
+        placed = update_leaderboards(id)
+        if len(placed) > 0:
+            for i in placed:
+                message.append(f"You placed on the <span class='leaderboard-message'>{i} leaderboard</span>.")
+        else: 
+            test.delete()
+            #if the test isn't in a leaderboard, it doesn't need to exist
 
         return JsonResponse({
-            "message": "Test finished"
+            "message": message
         }, status=200)
 
-@csrf_exempt 
+@csrf_protect
 def create_test(request):
+    #deletes all userless tests
     Test.objects.filter(user=None).delete()
+
+    if request.user.is_authenticated:
+        #delete all unfinished tests
+        user_tests = Test.objects.filter(user=request.user)
+        for x in user_tests:
+            if x.qpm == 0:
+                x.delete()
+
     if request.method == 'POST':
         #create test, return testid
         data = json.loads(request.body)
@@ -235,7 +258,7 @@ def create_test(request):
         return JsonResponse({
             "test_id": test.id,
             "logged_in": request.user.is_authenticated,
-        }, status=400)
+        }, status=200)
 
 def update_leaderboards(test_id):
     try:
@@ -251,6 +274,8 @@ def update_leaderboards(test_id):
                 "message": "Test does not exist"
             }, status=404)
     
+    placed = []
+    
     for leaderboard in all_leaderboards:
         if test.qpm > 0:
             #it is important to call "overall" first, as it is either overall or a number, and int() only works on the number strings.
@@ -258,9 +283,12 @@ def update_leaderboards(test_id):
                 if leaderboard.tests.count() < leaderboard.length:
                     leaderboard.tests.add(test)
                     leaderboard.save()
+                    placed.append(leaderboard.display_name)
                     #print(f"{leaderboard.name} is now at {leaderboard.tests.count()}")
                 elif test.qpm > leaderboard.min_value:
                     replace_leaderboard(leaderboard.name, test_id)
+                    placed.append(leaderboard.display_name)
+    return placed
 
 def replace_leaderboard(name, test_id):
     leaderboard = Leaderboard.objects.get(name=name)
@@ -272,6 +300,9 @@ def replace_leaderboard(name, test_id):
 
     leaderboard.tests.remove(minimum_test)
     leaderboard.tests.add(test)
+    minimum_test.delete()
+
+    leaderboard.save()
     #print(f"{minimum_test} was removed and replaced with {test}")
 
     #order_leaderboard with "replace" defines a leaderboard's new minimum

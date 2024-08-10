@@ -1,5 +1,4 @@
 {% extends "multiplix/layout.html" %}
-
 {% load static %}
 
 {% block title %}
@@ -14,10 +13,76 @@
         <div class="col-auto">
             <h1>
             {% if is_user %}
-            Hello, {{ user.username }}
-            {% else %}
-            {{ relative_user }}
-            {% endif %} </h1>
+            Hello, 
+            {% endif %} 
+            {{ user }}</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center" style="margin-top:15px;">
+        <div class="col-sm-4 col-12">
+            <div class="row">
+                <div class="col-12 text-center my-auto result-heading">
+                    Best Overall QPM
+                </div>
+                <div class="col-12 text-center my-auto result-qpm" id="score">
+                    {{ best_overall }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-12">
+            <div class="row">
+                <div class="col-12 profile-info text-sm-start text-center">
+                    {{ relative_user }} been playing since <span class="highlight">{{ date_created }}</span>.
+                </div>
+                <div class="col-12 profile-info text-sm-start text-center">
+                    {{ relative_user }} spent <span class="highlight">{{ total_time }} playing</span>.
+                </div>
+                <div class="col-12 profile-info text-sm-start text-center">
+                    {{ relative_user }} taken <span class="highlight">{{ tests_taken }} test{% if tests_taken > 1 %}s{% endif %}</span>.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-3 col-6">
+            <div class="row">
+                <div class="col-12 text-center my-auto result-heading">
+                    Best 30s
+                </div>
+                <div class="col-12 text-center my-auto result-number" id="score">
+                    {{ best_30 }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-6">
+            <div class="row">
+                <div class="col-12 text-center my-auto result-heading">
+                    Best 60s
+                </div>
+                <div class="col-12 text-center my-auto result-number" id="score">
+                    {{ best_60 }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-6">
+            <div class="row">
+                <div class="col-12 text-center my-auto result-heading">
+                    Best 120s
+                </div>
+                <div class="col-12 text-center my-auto result-number" id="score">
+                    {{ best_120 }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-6">
+            <div class="row">
+                <div class="col-12 text-center my-auto result-heading">
+                    Best 180s
+                </div>
+                <div class="col-12 text-center my-auto result-number" id="score">
+                    {{ best_180 }}
+                </div>
+            </div>
         </div>
     </div>
     {% if is_user %}
@@ -27,76 +92,9 @@
         </div>
     </div>
     {% endif %}
-    <div class="row justify-content-center" style="margin-top:15px;">
-        <div class="col-sm-4 col-12">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center my-auto result-heading">
-                    Best Overall QPM
-                </div>
-                <div class="col-12 d-flex justify-content-center my-auto result-number" id="score">
-                    {{ best_overall }}
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-12">
-            <div class="row">
-                <div class="col-12 profile-info text-sm-start text-center">
-                    {{ relative_user }} been playing since {{ date_created }}
-                </div>
-                <div class="col-12 profile-info text-sm-start text-center">
-                    {{ relative_user }} spent {{ total_time }} playing.
-                </div>
-                <div class="col-12 profile-info text-sm-start text-center">
-                    {{ relative_user }} taken {{ tests_taken }} test{% if tests_taken > 1 %}s{% endif %}.
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-sm-3 col-6">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center my-auto result-heading">
-                    Best 30s
-                </div>
-                <div class="col-12 d-flex justify-content-center my-auto result-number" id="score">
-                    {{ best_30 }}
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 col-6">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center my-auto result-heading">
-                    Best 60s
-                </div>
-                <div class="col-12 d-flex justify-content-center my-auto result-number" id="score">
-                    {{ best_60 }}
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 col-6">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center my-auto result-heading">
-                    Best 120s
-                </div>
-                <div class="col-12 d-flex justify-content-center my-auto result-number" id="score">
-                    {{ best_120 }}
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 col-6">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center my-auto result-heading">
-                    Best 180s
-                </div>
-                <div class="col-12 d-flex justify-content-center my-auto result-number" id="score">
-                    {{ best_180 }}
-                </div>
-            </div>
-        </div>
-</div>
 
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'multiplix/profile.js' %}"></script>
+<script src="{% static 'multiplix/prof.js' %}"></script>
 {% endblock %}

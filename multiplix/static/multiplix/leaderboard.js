@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    //navbar
+    document.querySelector("#leaderboard").classList.add('nav-link-active');
+
     document.querySelector("#page-button-container").style.display="none";
     load_leaderboard('overall', 1, "new-leaderboard");
 
@@ -80,7 +83,6 @@ function load_leaderboard(leaderboard, page, call_type){
 
             //fill up container with empty
             for (let x=0; x < (5-result.leaderboard.length); x++){
-                console.log(x);
                 const test = document.createElement('div');
                 test.setAttribute("class", "row justify-content-around leaderboard-entry leaderboard-entry-empty");
                 const place = document.createElement('div');
@@ -88,7 +90,6 @@ function load_leaderboard(leaderboard, page, call_type){
                 place.innerHTML = "None";
                 test.appendChild(place);
                 container.appendChild(test);
-                console.log(x);
             }
 
             document.querySelector("#page-button-container").style.display="flex";
@@ -98,7 +99,7 @@ function load_leaderboard(leaderboard, page, call_type){
             for (page_button in result.page_info){
                 const button = document.querySelector(`#${page_button}`);
                 button.style.visibility = "hidden";
-                console.log(eval(`result.page_info.${page_button}`));
+                //console.log(eval(`result.page_info.${page_button}`));
                 if (eval(`result.page_info.${page_button}`)){
                     button.style.visibility = "visible";
                     button.innerHTML = eval(`result.page_info.${page_button}`);
