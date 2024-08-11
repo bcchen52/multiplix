@@ -32,9 +32,8 @@ def create_leaderboards():
         top_qpm.save() 
     #print(Leaderboard.objects.all().count())
 
-create_leaderboards()
-
 def index(request):
+    create_leaderboards()
     return render(request, "multiplix/index.html")
 
 def login_view(request):

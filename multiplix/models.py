@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import datetime
 
 class User(AbstractUser):
     pass    
@@ -9,8 +10,8 @@ class Test(models.Model):
     qpm = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True)
     default = models.BooleanField(default=True)
     time=models.IntegerField(default=120)
-    add = models.BooleanField()
-    mult = models.BooleanField()
+    add = models.BooleanField(default=False)
+    mult = models.BooleanField(default=False)
 
     def get_user(self):
         if self.user:
