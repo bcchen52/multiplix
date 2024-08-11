@@ -98,29 +98,29 @@ function create_message(message, form){
     if (form.id == "register-username"){
         //user is valid if greater than 0
         if (!validity(form)){
-            message.innerHTML = `Username cannot be empty.`;
+            message.innerHTML = `<span><i class="fa fa-exclamation-circle my-auto register-exclamation-mark"></i>&nbsp;Username cannot be empty.</span>`;
         } else if (form.value.length < 16){
-            message.innerHTML = `${16 - form.value.length} characters remaining.`;
+            message.innerHTML = `<span><span class="register-check-mark">&#10003;</span>&nbsp;${16 - form.value.length} characters remaining.</span>`;
         } else {
-            message.innerHTML = `Username at max length.`;
+            message.innerHTML = `<span><span class="register-check-mark">&#10003;</span>&nbsp;Username at max length.</span>`;
         }
     } else if (form.id == "register-password"){
         if (validity(form)){
-            message.innerHTML = `Valid password.`;
+            message.innerHTML = `<span><span class="register-check-mark">&#10003;</span>&nbsp;Valid password.</span>`;
         } else {
-            message.innerHTML = `Password needs ${8 - form.value.length} more characters.`;
+            message.innerHTML = `<span><i class="fa fa-exclamation-circle my-auto register-exclamation-mark"></i>&nbsp;Password needs ${8 - form.value.length} more characters.</span>`;
         }
     } else if (form.id == "register-email"){
         if (validity(form)){
-            message.innerHTML = `Valid email.`;
+            message.innerHTML = `<span><span class="register-check-mark">&#10003;</span>&nbsp;Valid email.</span>`;
         } else {
-            message.innerHTML = `Enter a valid email that contains "@"`;
+            message.innerHTML = `<span><i class="fa fa-exclamation-circle my-auto register-exclamation-mark"></i>&nbsp;Enter a valid email that contains "@".</span>`;
         }
     } else if (form.id == "register-confirm"){
         if (validity(form)){
-            message.innerHTML = `Valid password.`;
+            message.innerHTML = `<span><span class="register-check-mark">&#10003;</span>&nbsp;Matches password.</span>`;
         } else {
-            message.innerHTML = `Must match a VALID password.`;
+            message.innerHTML = `<span><i class="fa fa-exclamation-circle my-auto register-exclamation-mark"></i>&nbsp;Must match a VALID password.</span>`;
         }
     }
 }

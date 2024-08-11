@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     home();
     set_default();
     set_time("time-120");
+    reset_message();
+
     //start test, only works if test hasn't been started, which is indicated if incrementer is null
     document.addEventListener("keydown", event => {
         if (event.key === "Enter") {
@@ -22,9 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     //either addition or multiplication need to be selected
     document.querySelectorAll('.form-check-input').forEach((operation_switch) => {
         operation_switch.onclick = () => {
+            reset_message();
             if (!sign_clicked()) {
                 //If clicking that switch would turn both addition and multiplication off, undo it
                 operation_switch.checked = true;
+                settings_message("Select at least one operation");
             } else {
                 //If a click did happen
                 let operation = "mult";
@@ -49,8 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if (input.id.includes("add")){
                 max_len = 4;
             }
-            if (input.value.length > max_len){
-                input.value = input.value.slice(0,max_len)
+            if (input.value.length > 0 && Number(input.value[0]) == 0) {
+                //prevents the user from entering 0 by removing all leading 0s
+                //although only removing the first leading 0 would prevent the user from 
+                //typing in ANY leading zeros(including lone 0s), it does not account for copy and pasting
+                var leading_zeros = 0;
+                for(i=0; i<input.value.length;i++){
+                    if (Number(input.value[i]) == 0 && i == leading_zeros){
+                        leading_zeros ++;
+                    }
+                }
+                input.value = input.value.slice(beginning_zeros, input.value.length);
+                //new value = input.value.slice(1, input.value.length);
+                settings_message(`${operation} only takes ${max_len} digits`);
+            }
+            else if (input.value.length > max_len){
+                input.value = input.value.slice(0,max_len);
+
+                let operation = "Addition/Subtraction";
+                if (max_len == 3){
+                    operation = "Multiplication/Division";
+                }
+                settings_message(`${operation} only takes ${max_len} digits`);
+            }
+            else {
+                reset_message();
             }
         }
     });
@@ -81,6 +108,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector('#default-button').onclick = set_default;
 });
+
+function reset_message(){
+    document.querySelector(".error-message").style.display = "none";
+}
+
+function settings_message(message){
+    document.querySelector(".error-message").style.display = "flex";
+    document.querySelector(".settings-error-message").innerHTML = message;
+}
 
 function set_default(){
     document.querySelector('#addition-switch').checked = default_settings[0];
@@ -148,12 +184,19 @@ const setState = (callback) => {
     updateCounter(); // extracted function
 }
 
+const setQpm = (callback) => {
+    callback();
+    updateQPM();
+}
+
 Count.state = {
     test_id: 0,
     count: 10,
+    current_qpm: 0,
     increment: () => {
         if (Count.state.count > 0) {
             setState(() => Count.state.count--);
+            setQpm(() => Count.state.current_qpm = Math.round((Test.state.score / ((Test.state.time-Count.state.count)/60))*100) /100 );
         } else {
             clearInterval(incrementer);
             results();
@@ -161,6 +204,7 @@ Count.state = {
     },
     reset: (num) => {
         setState(() =>  Count.state.count = num);
+        setQpm(() =>  Count.state.current_qpm = 0);
     },
     new_test: (id) => {
         Count.state.test_id = id;
@@ -170,6 +214,12 @@ Count.state = {
 const updateCounter = () => {
     document.querySelector("#counter").innerHTML = Count();
 };
+
+const updateQPM = () => {
+    document.querySelector("#test-qpm").innerHTML = Count.state.current_qpm;
+}
+
+
 
 var finish_test = null;
 
@@ -234,7 +284,7 @@ function results() {
 
     const result_message = document.querySelector('.result-message');
     const result_col = document.createElement('div');
-    result_col.setAttribute('class', 'col-lg-7 col-md-8 col-sm-10 col-12 text-sm-start text-center');
+    result_col.setAttribute('class', 'col-xl-8 col-sm-10 col-12 text-center result-message-text');
 
     //console.log(`The score is ${Test.state.score}`);
 
@@ -277,19 +327,21 @@ function results() {
                     time: Test.state.time,
                     is_default: Test.state.is_default,
                 }),
-                mode: 'same-origin',
+                credentials: 'same-origin',
             })
             .then( response => response.json())
             .then( result => {
                 //console.log(result.message);
                 if (result.message.length > 0){
+                    result_col.innerHTML = "<div class='text-center congrats-text'>Congradulations!</div>";
                     result.message.forEach((msg) => {
-                        const result_container = document.createElement('div');
-                        result_container.setAttribute('class', 'col-lg-7 col-md-8 col-sm-10 col-12 text-sm-start text-center');
-                        result_container.innerHTML = msg;
+                        const message = document.createElement('div');
+                        message.innerHTML = `<span class="congrats-exclamation-mark"><i class="fa fa-exclamation-circle" ></i></span>&nbsp; ${msg}`;
                         //console.log("created");
-                        result_message.appendChild(result_container);
+                        result_col.appendChild(message);
+
                     });
+                    result_message.appendChild(result_col);
                 }
             });
         }
@@ -307,7 +359,7 @@ function make_test() {
     const time = get_time();
     
     //run validate settings
-    let settings_info = validate_settings();
+    const settings_info = validate_settings();
     const settings = settings_info[1];
     //console.log(settings_info[2]);
 
@@ -340,7 +392,7 @@ function make_test() {
                 mult: settings[5],
                 is_default: is_def,
             }),
-            mode: 'same-origin',
+            credentials: 'same-origin',
         })
         .then( response => response.json())
         .then( result => {
@@ -365,8 +417,21 @@ function make_test() {
 
         //increment
     } else {
-        error.innerHTML = settings_info[2];
-        error.style.display = 'block';
+        let error_operation = 'Addition/Subtration';
+        let error_message = "";
+        if(settings_info[2].includes('mult')){
+            error_operation = 'Multiplication/Division';
+        }
+        if(settings_info[2].includes('range')){
+            error_message = `Enter a valid range for ${error_operation}`;
+        } else {
+            let upper_range = 999;
+            if (error_operation.includes('A')){
+                upper_range = 9999;
+            }
+            error_message = `Enter a valid number for ${error_operation} between 1 and ${upper_range}`;
+        }
+        settings_message(error_message);
     }
 }
 
@@ -572,10 +637,13 @@ function validate_settings(){
     
     if (add){
         //first, check if numeric
+        //conveniently, - and + can be entered into a number input field, however, retrieving it in JS
+        //returns a blank string, which results in 0 after Number(), which we do not want anyways
+        //x == 0 takes care of a blank input, input = 0, and input has invalid characters
         settings.slice(1,5).forEach((x) => {
-            if (isNaN(x)){
+            if (isNaN(x) || x==0){
                 is_valid = false;
-                error_message = "Invalid Input";
+                error_message = "add_num";
             } 
         });
 
@@ -583,20 +651,20 @@ function validate_settings(){
         if (is_valid){
             if (settings[1] == settings[2] || settings[3] == settings[4]){
                 is_valid = false;
-                error_message = "Invalid Range";
+                error_message = "add_range";
             }
         }
-    } if (mult){
+    } if (mult && is_valid){
         settings.slice(6,10).forEach((x) => {
-            if (isNaN(x)){
+            if (isNaN(x) || x==0){
                 is_valid = false;
-                error_message = "Invalid Input";
+                error_message = "mult_num";
             } 
         })
         if (is_valid){
             if (settings[1] == settings[2] || settings[3] == settings[4]){
                 is_valid = false;
-                error_message = "Invalid Range";
+                error_message = "mult_range";
             }
         }
     }

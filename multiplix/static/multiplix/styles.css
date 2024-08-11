@@ -132,6 +132,7 @@ a{
 .notice {
     font-size: 12px;
     margin-bottom:5px;
+    font-family: 'Courier Prime';
 }
 
 .navbar {
@@ -394,6 +395,13 @@ footer a {text-decoration: none;}
     color: #9ccfd8;
 }
 
+.error-message {
+    color:  #ff4d4d;
+    font-family: 'Courier Prime';
+    font-stretch:condensed;
+    font-size: 15px;
+}
+
 .leaderboard-message {
     font-weight:bold;
     color:#ffd900;
@@ -401,5 +409,45 @@ footer a {text-decoration: none;}
 
 .personal-message {
     font-weight:bold;
+    color:#66FCF1;
+}
+
+.test-qpm {
+    color:#ffd900;
+    font-size:40px;
+    font-weight: bold;
+}
+
+.result-message {
+    margin-bottom: 10px;
+}
+
+.result-message-text {
+    font-size: 15px;
+    font-family: 'Courier Prime';
+}
+
+.congrats-text {
+    color:#ffd900;
+    font-weight:bold;
+    font-size:20px;
+    font-family: 'Courier Prime';
+}
+
+.congrats-exclamation-mark{
+    color:#ffd900;
+} 
+
+#register-message{
+    margin-top: 5px;
+    font-size: 15px;
+    font-family: 'Courier Prime';
+}
+
+.register-exclamation-mark{
+    color: #ff4d4d;
+}
+
+.register-check-mark{
     color:#66FCF1;
 }

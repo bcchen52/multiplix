@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     //navbar
-    document.querySelector("#profile").classList.add('nav-link-active');
+    if (document.querySelector("#profile") != null){
+        document.querySelector("#profile").classList.add('nav-link-active');
+    }
 });

@@ -128,6 +128,7 @@ def profile(request, username):
 
 
     return render(request, "multiplix/profile.html", {
+        "username": user.username,
         "relative_user": relative_user,
         "best_overall": profile.best_overall, 
         "best_30": profile.best_30, 
