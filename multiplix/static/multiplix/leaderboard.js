@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //navbar
     document.querySelector("#leaderboard").classList.add('nav-link-active');
 
-    document.querySelector("#page-button-container").style.display="none";
+    document.querySelector("#page-button-container").style.visibility="hidden";
     load_leaderboard('overall', 1, "new-leaderboard");
 
     document.querySelectorAll('.leaderboard-button').forEach((button) => {
@@ -33,7 +33,7 @@ function load_leaderboard(leaderboard, page, call_type){
 
         if (result.leaderboard.length == 0){
             container.innerHTML = "Wow so empty";
-            document.querySelector("#page-button-container").style.display="none";
+            document.querySelector("#page-button-container").style.visibility="hidden";
         } else {
             result.leaderboard.forEach((test_info)=>{
                 const test = document.createElement('div');
@@ -92,9 +92,10 @@ function load_leaderboard(leaderboard, page, call_type){
                 container.appendChild(test);
             }
 
-            document.querySelector("#page-button-container").style.display="flex";
+            document.querySelector("#page-button-container").style.visiblity="visible";
 
             document.querySelector("#current").innerHTML = page;
+            document.querySelector('#current').style.visibility = "visible"
 
             for (page_button in result.page_info){
                 const button = document.querySelector(`#${page_button}`);

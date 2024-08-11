@@ -2,7 +2,6 @@ body {
     font-family: 'Poppins';
     background-color: #0B0C10;
     color: #C5C6C7;
-    margin-bottom:50px;
 }
 
 ::-webkit-scrollbar {
@@ -32,6 +31,7 @@ a{
 .body {
     margin-left:5%;
     margin-right:5%;
+    padding-bottom:30px;
 }
 
 .login-buttons {
@@ -352,6 +352,10 @@ textarea:focus, input:focus{
     cursor: pointer;
 }
 
+.page-button-container {
+    padding-bottom: 20px;
+}
+
 .page-button:hover {
     color: #C5C6C7;
 }
@@ -384,7 +388,6 @@ footer {
     background-color: #1F2833;
     width:100%;
     position:absolute;
-    margin-top: 20px;
     left:0;
     opacity: 0;
 }

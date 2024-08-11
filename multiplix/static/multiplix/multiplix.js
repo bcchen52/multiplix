@@ -154,20 +154,10 @@ function disable_inputs(operation){
     }
 }
 
-//TODO list 
-//Leckerki one// Long Cang Lovers Quarrel
-//if user...
-//-----full
-//leaderboard
-//user page
-//user page
 
-//-----backend
+function set_footer(){
 
-//-----frontend
-//settings
-//test page
-
+}
 
 //default settings 
 const default_settings = [true, 12, 100, 12, 100, true, 5, 12, 12, 99];
@@ -349,6 +339,8 @@ function results() {
         result_col.innerHTML = `<p><a href="/login">Log in</a> to save your data and place on the leaderboards.</p>`;
         result_message.appendChild(result_col);
     };
+    document.querySelector("#answer").focus();
+    document.querySelector("#answer").blur();
 }
 function make_test() {
     //hide message block within the test container, reactived if incorrect settings
@@ -407,7 +399,7 @@ function make_test() {
         document.querySelector("#answer").focus();
 
         //set time
-        Count.state.reset(time);
+        Count.state.reset(2);
 
         //console.log(timeoutId);
 
@@ -662,7 +654,7 @@ function validate_settings(){
             } 
         })
         if (is_valid){
-            if (settings[1] == settings[2] || settings[3] == settings[4]){
+            if (settings[6] == settings[7] || settings[8] == settings[9]){
                 is_valid = false;
                 error_message = "mult_range";
             }
