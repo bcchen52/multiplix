@@ -156,7 +156,7 @@ def get_leaderboard(request, name, page):
     except Leaderboard.DoesNotExist:
         return JsonResponse({
             "message": f"Leaderboard does not exist!",
-        }, status=404)
+        }, status=200)
     
     values = order_leaderboard(name, "get")
 
@@ -269,13 +269,13 @@ def update_leaderboards(test_id):
     except Leaderboard.DoesNotExist:
         return JsonResponse({
                 "message": "Leaderboards do not exist"
-            }, status=404)
+            }, status=200)
     try:
         test = Test.objects.get(id=test_id)
     except Test.DoesNotExist:
         return JsonResponse({
                 "message": "Test does not exist"
-            }, status=404)
+            }, status=200)
     
     placed = []
     
