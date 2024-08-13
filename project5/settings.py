@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-cx)8-0kklp6c^k_lfv*o^ubi*&ht^aiwlr2=-&&3wxe)%hz1p_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.18.106.48', 'multiplix.net', 'www.multiplix.net', 'localhost']
 
 AUTH_USER_MODEL = 'multiplix.User'
 
@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'project5.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'multiplix',
+	'USER': 'superuser',
+        'PASSWORD': 'super123',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -118,6 +122,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
