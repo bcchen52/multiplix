@@ -29,6 +29,9 @@ ALLOWED_HOSTS = ['3.18.106.48', 'multiplix.net', 'www.multiplix.net', 'localhost
 
 AUTH_USER_MODEL = 'multiplix.User'
 
+CSRF_TRUSTED_ORIGINS = ['https://multiplix.net', 'https://www.multiplix.net']
+
+
 # Application definition
 
 INSTALLED_APPS = [
