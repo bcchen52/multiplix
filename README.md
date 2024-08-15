@@ -1,6 +1,60 @@
 # MultipliX - Capstone Project
 MultipliX is a website that allows users to customize mental math tests and compete with others. This takes inspiration from the example of answering a math question used to demonstrate React in lecture ___ and from the website MonkeyType, which allows users to customize their experience and their typing tests. Websites that allow you to test mental math ability tend to be simpler and not as advanced as ___
 
+# How to use locally
+To create a local version of MultipliX to edit, we need default to revert our Django settings for production.
+
+In `project5/settings.py`
+
+```
+DEBUG = True
+...
+
+SECRET_KEY = #secret key here
+...
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
+
+Run 
+```
+python manage.py makemigrations multiplix
+
+python manage.py migrate 
+```
+
+# How to apply changes to production
+Ssh into ec2 instance with keypair and cd into `/home/ubuntu/multiplix`
+
+Pull changes from repo
+```
+git pull
+```
+
+Collect static files
+```
+python manage.py collectstatic
+```
+
+Move static files to `/var/www/`
+
+Run 
+```
+sudo systemctl restart gunicorn
+```
+for changes to the Django application.
+
+Run 
+```
+sudo systemctl restart nginx
+```
+for changes to static files.
+
 # Distinctiveness and Complexity
 ## Frontend
 There are five HTML templates, index(for test settings, test, and result), leaderboard(to display all leaderboards), login, profile, and info.
