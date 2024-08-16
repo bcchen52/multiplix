@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         leading_zeros ++;
                     }
                 }
-                input.value = input.value.slice(beginning_zeros, input.value.length);
+                input.value = input.value.slice(leading_zeros, input.value.length);
                 //new value = input.value.slice(1, input.value.length);
-                settings_message(`${operation} only takes ${max_len} digits`);
+                settings_message(`No leading zeros`);
             }
             else if (input.value.length > max_len){
                 input.value = input.value.slice(0,max_len);
@@ -154,10 +154,6 @@ function disable_inputs(operation){
     }
 }
 
-
-function set_footer(){
-
-}
 
 //default settings 
 const default_settings = [true, 12, 100, 12, 100, true, 5, 12, 12, 99];
@@ -273,6 +269,7 @@ function results() {
     qpm = Math.round(qpm * 100) / 100;
 
     const result_message = document.querySelector('.result-message');
+    result_message.innerHTML = "";
     const result_col = document.createElement('div');
     result_col.setAttribute('class', 'col-xl-8 col-sm-10 col-12 text-center result-message-text');
 
@@ -345,8 +342,9 @@ function results() {
 function make_test() {
     //hide message block within the test container, reactived if incorrect settings
 
-    //clear input field
+    //clear input and question field
     document.querySelector('#answer').value = "";
+    document.querySelector('#question').innerHTML = "";
 
     const time = get_time();
     
@@ -399,7 +397,7 @@ function make_test() {
         document.querySelector("#answer").focus();
 
         //set time
-        Count.state.reset(time);
+        Count.state.reset(2);
 
         //console.log(timeoutId);
 
@@ -553,12 +551,15 @@ function make_equation(a, b, eq_type){
     return [equation, result, eq_type];
 }
 
-function display_question(equation, result, eq_type){
-    const question = document.querySelector('#question');
-    //console.log(question);
-    question.innerHTML = equation;
-    document.querySelector('#question').animate([{opacity: '0', right: '-20%'},{opacity : '1', right: '0%'}],{duration:100,})
 
+
+async function display_question(equation, result, eq_type){
+    const question = document.querySelector('#question');
+    question.style.fontSize = "80px";
+    question.style.opacity = "0";
+    question.innerHTML = equation;
+
+    document.querySelector('#question').animate([{opacity: '0', right: '-20%'},{opacity : '1', right: '0%'}],{duration:100,})
 
     const score = document.querySelector('#current-score');
     score.innerHTML = Test.state.score;
@@ -574,6 +575,9 @@ function display_question(equation, result, eq_type){
             generate_question();
         }
     }
+
+    resize_question();
+    question.style.opacity = "1";
 }
 
 function get_time(){
@@ -699,6 +703,21 @@ function end_test(){
     //clear counters and timers 
     clearTimeout(finish_test);
     finish_test = null;
+}
+
+function resize_question(){
+    const question = document.querySelector('#question'); 
+    const screen_width = document.querySelector('.question-container').getBoundingClientRect().width;
+   
+    console.log(screen_width);
+    console.log(question.getBoundingClientRect().width);
+    if (question.getBoundingClientRect().width > 1 * (screen_width)){
+        console.log(Math.floor(((0.8 * screen_width) / (question.getBoundingClientRect().width)) * 80));
+        question.style.fontSize = `${Math.floor(((1 * (screen_width)) / (question.getBoundingClientRect().width)) * 80)}px`;
+    } else { 
+        //the other resize functions don't need this, but we call this many times on one page load
+        question.style.fontSize = '80px';
+    }
 }
 
 //taken from Django's website

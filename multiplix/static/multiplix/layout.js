@@ -3,14 +3,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const footer = document.querySelector("footer");
     const body = document.querySelector(".body");
-    var load_in_position = body.getBoundingClientRect().bottom;
-    
-    if (window.innerHeight > load_in_position) {
-        load_in_position = window.innerHeight;
-    }
 
-    position_footer.state.set_position(load_in_position);
-    footer.style.opacity = 1;
+    //wait for pages to populate
+    setTimeout(() => {
+        var load_in_position = body.getBoundingClientRect().bottom;
+        if (window.innerHeight > load_in_position) {
+            load_in_position = window.innerHeight;
+        }
+    
+        position_footer.state.set_position(load_in_position);
+        footer.style.opacity = 1;
+    }, 100);
+
     //when the page is loaded, put the footer at the bottom just outside of view
     //when the window is larger than when first loaded, the footer sticks to the bottom.
     //and when minimized the footer snaps back to its position when it was first loaded
@@ -22,7 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
     //this is for the settings page, as the results can be a lot bigger than the rest of the page especially on smaller screens
     if (document.querySelector('#answer') != null){
         document.querySelector('#answer').addEventListener("blur", () => {
-           position_footer();
+            setTimeout(() => {
+                position_footer();
+            }, 100);
+        });
+    }
+
+    //faq screen
+    if (document.querySelector('.faq-item') != null){
+        document.querySelectorAll('.faq-heading').forEach((item) => {
+            item.onclick = () => {
+                setTimeout(() => {
+                    position_footer();
+                }, 100);
+            }
         });
     }
 });
@@ -31,7 +48,7 @@ function position_footer(){
     const footer = document.querySelector("footer");
     const footer_info = footer.getBoundingClientRect();
     const body = document.querySelector(".body").getBoundingClientRect();
-    if (footer_info.top < body.bottom) {
+    if (position_footer.state.position < body.bottom) {
         //change the position
         position_footer.state.set_position(body.bottom);
     } else {

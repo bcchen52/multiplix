@@ -24,8 +24,22 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
+.leaderboard-username {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 a{
     color: #ffd900;
+}
+
+.achievements {
+    border-radius: 10px;
+    background-color: #1F2833;
+}
+.achievements-message {
+    margin-top: 5px;
 }
 
 .body {
@@ -99,13 +113,17 @@ a{
     color: #ffd900;
 }
 
-.info {
+.faq {
     color:#e5e6e6;
     font-size: 15px;
 }
 
-.info-heading {
+.faq-heading {
     margin-top:15px;
+}
+
+.faq-content {
+    display: none;
 }
 
 .info-main {
@@ -117,6 +135,7 @@ a{
     font-size: 80px;
     font-weight: bold;
     color: #66FCF1;
+    white-space: nowrap;
 }
 
 .highlight {
@@ -150,10 +169,44 @@ a.nav-link-active {
     pointer-events: none;
 }
 
+.nav-link-symbol{
+    font-size: 25px;
+}
+
 .navbar-brand-active {
     color: #ffd900 !important;
     text-decoration: none;
     pointer-events: none;
+}
+
+.leaderboard-icon {
+    margin-right: 3px;
+}
+
+.trophy-icon {
+    font-size: 40px;
+    color: #ffd900;
+    margin:5px;
+}
+.level-icon {
+    margin-right:5px;
+}
+
+.level-1-icon {
+    color: #FF5733;
+}
+
+.level-2-icon {
+    color: #66FCF1;
+}
+
+.level-3-icon {
+    color: #ffd900;
+}
+
+.username {
+    color: #e5e6e6;
+    white-space: nowrap;
 }
 
 a.nav-link {
@@ -161,8 +214,7 @@ a.nav-link {
 }
 
 a.nav-link:hover {
-    font-weight:bold;
-    color: #C5C6C7;
+    color: #e5e6e6;
 }
 
 .navbar-brand {
@@ -172,6 +224,7 @@ a.nav-link:hover {
 }
 
 .navbar-brand:hover {
+    font-weight:bold;
     color: #66FCF1;
 }
 
@@ -191,7 +244,7 @@ hr {
     padding-bottom:10px;
     border-radius: 10px;
     margin-bottom: 10px;
-    color:#66FCF1;
+    color: #e5e6e6;
 }
 
 .leaderboard-entry:hover {
@@ -291,6 +344,20 @@ textarea:focus, input:focus{
 .result-number {
     font-size:100px;
     color: #45A29E;
+}
+
+.faq-title-container {
+    margin-top: 20px;
+}
+
+.faq-title {
+    font-size: 50px;
+    white-space: nowrap;
+    color:#e5e6e6;
+}
+
+.faq-item {
+    cursor: pointer;
 }
 
 .result-qpm {

@@ -10,13 +10,21 @@
 {% block body %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-auto">
+        <div class="col-auto text-center">
             <h1>
             {% if is_user %}
             Hello, 
             {% endif %} 
-            {{ username }}
+            <span class="username">{{ username }}</span>
+            <input id="username" type="hidden" value="{{ username }}">
+            <input id="is_user" type="hidden" value="{{ is_user }}">
             </h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-auto text-center achievements">
+        </div>
+        <div class="col-12 text-center leaderboard-message achievements-message">
         </div>
     </div>
     <div class="row justify-content-center" style="margin-top:15px;">

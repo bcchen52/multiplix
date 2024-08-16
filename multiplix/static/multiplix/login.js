@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             create_message(message, form);
             
             form.oninput = () => {
+                clean_input(form)
                 validity(form);
                 create_message(message, form);
             }
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.onblur = () => {
             message.style.display = "none";
         }
-        console.log(form.id);
+        //console.log(form.id);
     });
 
     document.querySelectorAll('.login-form').forEach((form) => {
@@ -38,14 +39,27 @@ document.addEventListener('DOMContentLoaded', function() {
     //keydown causes issues
     //each time anything is clicked, check if the forms are valid
     document.onkeyup = () => {
-        console.log("clicked");
+        //console.log("clicked");
         register_validity(register_button);
         register_validity(login_button);
     }
 });
 
+function clean_input(form){
+    //removes white space from all, special characters from user, and special characters except for @ and . in email
+    if (form.id.includes('register')){
+        if (form.id.includes('username')){
+            form.value = form.value.replace(/[^a-zA-Z0-9 ]/g, "")
+        } else if (form.id.includes('email')){
+            //alphanumeric
+            form.value = form.value.replace(/[^0-9a-zA-Z.@ ]/g, "")
+        } 
+        form.value = form.value.replace(/\s/g, "");
+    }
+}
+
 function validity(form){
-    console.log(form.id);
+    //console.log(form.id);
     if (form.id == "register-username") {
         if (form.value.length > 0){
             //console.log("valid");

@@ -32,6 +32,12 @@ class Profile(models.Model):
     best_60 = models.IntegerField(default=0)
     best_120 = models.IntegerField(default=0)
     best_180 = models.IntegerField(default=0)
+    level = models.IntegerField(default=0)
+    place_overall = models.BooleanField(default=False)
+    place_30 = models.BooleanField(default=False)
+    place_60 = models.BooleanField(default=False)
+    place_120 = models.BooleanField(default=False)
+    place_180 = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user

@@ -28,28 +28,44 @@ function load_leaderboard(leaderboard, page, call_type){
 
         document.querySelector('h1').innerHTML = result.display_name;
         document.querySelector('title').innerHTML = result.display_name;
+        console.log(result);
 
         var promise = Promise.resolve();
 
         if (result.leaderboard.length == 0){
             container.innerHTML = "Wow so empty";
             document.querySelector("#page-button-container").style.visibility="hidden";
+            document.querySelector("#current").style.visibility="hidden";
         } else {
             result.leaderboard.forEach((test_info)=>{
+                const level_icons = {
+                    1 : "fire",
+                    2 : "dragon",
+                    3 : "dragon",
+                }
+
                 const test = document.createElement('div');
-                test.setAttribute("class", "row justify-content-around leaderboard-entry");
+                test.setAttribute("class", "row justify-content-between leaderboard-entry");
                 const user = document.createElement('div');
                 const qpm = document.createElement('div');
                 const place = document.createElement('div');
+
                 place.setAttribute("class", "col-2 text-center place-sign");
-                user.setAttribute("class", "col-2 text-center my-auto");
+                user.setAttribute("class", "col-8 text-center my-auto leaderboard-username");
                 qpm.setAttribute("class", "col-2 text-center my-auto");
                 user.innerHTML = test_info.name;
                 qpm.innerHTML = test_info.qpm;
                 place.innerHTML = test_info.place;
+
+                if (test_info.level > 0){
+                    const level_icon = document.createElement('span');
+                    level_icon.setAttribute('class', `leaderboard-icon level-${test_info.level}-icon`);
+                    level_icon.innerHTML = `<i class="fa-solid fa-${level_icons[test_info.level]}"></i>`;
+                    user.insertBefore(level_icon, user.firstChild);
+                }
     
-                test.appendChild(user);
                 test.appendChild(place);
+                test.appendChild(user);
                 test.appendChild(qpm);
 
                 test.onclick = () => {

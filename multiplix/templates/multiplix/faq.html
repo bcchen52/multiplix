@@ -1,0 +1,61 @@
+{% extends "multiplix/layout.html" %}
+{% load static %}
+
+{% block title %}
+<title>
+    Frequently Asked Questions
+</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto text-center faq-title-container">
+            <span class="faq-title">Frequently Asked Questions</span>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-8 col-sm-10 col-12">
+            <div class="row justify-content-center faq-item" id="1">
+                <div class="col-12 faq faq-heading">
+                    <h2>What is QPM?</h2>
+                    <hr>
+                </div>
+                <div class="col-12 faq faq-content" id="faq-1">
+                    <span class="highlight-2">QPM</span> stands for <span class="highlight-2">Questions Per Minute</span>, similar to how WPM, Words Per Minute, measures performance used on typing tests.
+                    <br>
+                    <br>
+                    QPM is used rather than a raw score to provide a uniform way to measure performance. There are also leaderboards for each specific time option.
+                </div>
+            </div>
+            <div class="row justify-content-center faq-item" id="2">
+                <div class="col-12 faq faq-heading">
+                    <h2>How do I compete with others?</h2>
+                    <hr>
+                </div>
+                <div class="col-12 faq faq-content" id="faq-2">
+                    In order to have your scores displayed in your profile or ranked on the leaderboards, you must play with default settings. These settings are loaded in by default, and can be re-selected with the <span class="highlight-2">Reset to Default Settings.</span> button.
+                </div>
+            </div>
+            <div class="row justify-content-center faq-item" id="3">
+                <div class="col-12 faq faq-heading">
+                    <h2>What are the symbols in front of people's usernames?</h2>
+                    <hr>
+                </div>
+                <div class="col-12 faq faq-content" id="faq-3">
+                    <p>Those symbols are the ranks, based on time on MultipliX.</p>
+                    <p><i class="level-1-icon fa-solid fa-fire rank-1"></i> Rank 1 - 10 minutes</p>
+                    <p><i class="level-2-icon fa-solid fa-dragon"></i> Rank 2 - 1 hour</p>
+                    <p><i class="level-3-icon fa-solid fa-dragon"></i> Rank 3 - 1 day</p>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'multiplix/faq.js' %}"></script>
+{% endblock %}

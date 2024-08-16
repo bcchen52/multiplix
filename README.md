@@ -10,9 +10,12 @@ In `project5/settings.py`
 DEBUG = True
 ...
 
+ALLOWED_HOSTS = [..., '127.0.0.1']
+
 SECRET_KEY = #secret key here
 ...
 
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
