@@ -397,7 +397,7 @@ function make_test() {
         document.querySelector("#answer").focus();
 
         //set time
-        Count.state.reset(2);
+        Count.state.reset(time);
 
         //console.log(timeoutId);
 
