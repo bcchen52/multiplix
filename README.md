@@ -1,5 +1,14 @@
-# MultipliX - Capstone Project
-MultipliX is a website that allows users to customize mental math tests and compete with others. This takes inspiration from the example of answering a math question used to demonstrate React in lecture ___ and from the website MonkeyType, which allows users to customize their experience and their typing tests. Websites that allow you to test mental math ability tend to be simpler and not as advanced as ___
+# MultipliX @ [multiplix.net](https://www.multiplix.net/)
+MultipliX is a website that allows users to customize mental math tests and compete with others. This takes inspiration from the website MonkeyType, which allows users to customize their experience and their touch-typing tests Websites that allow you to test mental math ability tend to be simpler and not as advanced as touch-typing sites tend to me.
+
+# About MultipliX
+MultipliX uses Django with a PostgreSQL database on the backend. The frontend uses Bootstrap and vanilla JavaScript for user responsiveness and single-page views. 
+
+MultipliX is hosted on an AWS EC2 instance using Gunicorn and Nginx, following this [tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu#django-is-displaying-could-not-connect-to-server-connection-refused). Https functionality is implented with [Certbot](https://certbot.eff.org/). 
+
+# Next updates
+- Responsive spacing on leaderboard titles
+- Allowing "_" and "-" in username registering
 
 # How to use locally
 To create a local version of MultipliX to edit, we need default to revert our Django settings for production.
@@ -36,25 +45,36 @@ Ssh into ec2 instance with keypair and cd into `/home/ubuntu/multiplix`
 
 Pull changes from repo
 ```
-git pull
+$ git pull
+```
+
+Start the virtual environment
+```
+$ source env/bin/activate
+```
+
+If necessary, makemigrations and migrate
+```
+(env)$ ~/multiplix/manage.py makemigrations multiplix
+(env)$ ~/multiplix/manage.py migrate
 ```
 
 Collect static files
 ```
-python manage.py collectstatic
+(env)$ ~/multiplix/manage.py collectstatic
 ```
 
 Move static files to `/var/www/`
 
 Run 
 ```
-sudo systemctl restart gunicorn
+$ sudo systemctl restart gunicorn
 ```
 for changes to the Django application.
 
 Run 
 ```
-sudo systemctl restart nginx
+$ sudo systemctl restart nginx
 ```
 for changes to static files.
 
