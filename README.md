@@ -1,4 +1,4 @@
-# MultipliX @ [multiplix.net](https://www.multiplix.net/)
+# MultipliX @ [multiplix.net](https://www.multiplix.net)
 MultipliX is a website that allows users to customize mental math tests and compete with others. This takes inspiration from the website MonkeyType, which allows users to customize their experience and their touch-typing tests Websites that allow you to test mental math ability tend to be simpler and not as advanced as touch-typing sites typically are.
 
 MultipliX uses Django with a PostgreSQL database on the backend. The frontend uses Bootstrap and vanilla JavaScript for user responsiveness and single-page views. 
