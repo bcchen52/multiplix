@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['3.18.106.48', 'multiplix.net', 'www.multiplix.net', 'localhost']
+ALLOWED_HOSTS = ['3.134.107.232', 'multiplix.net', 'www.multiplix.net', 'localhost']
 
 AUTH_USER_MODEL = 'multiplix.User'
 
