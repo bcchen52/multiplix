@@ -101,6 +101,8 @@ Start the virtual environment...
 $ source env/bin/activate
 ```
 
+Set up Postgresql and grant access and change ownership of schema.
+
 If necessary, makemigrations and migrate...
 ```
 (env)$ ~/multiplix/manage.py makemigrations multiplix
