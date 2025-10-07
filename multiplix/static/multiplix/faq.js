@@ -25,8 +25,8 @@ function resize_title(){
 
 function click_faq(id){
     document.querySelectorAll(".faq-content").forEach((content) => {
-        if (content.id.includes(`${id}`)){
-            if (content.style.display === "none"){
+        if (content.id.includes(id)){
+            if (getComputedStyle(content).display == "none"){
                 content.style.display = "block";
             } else {
                 content.style.display = "none";
