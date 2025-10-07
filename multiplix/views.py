@@ -1,4 +1,5 @@
 import json
+import time
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -212,6 +213,7 @@ def get_leaderboard(request, name, page):
 def test(request, id):  
     #finish test
     if request.method == 'PUT':
+        time_start = time.perf_counter()
         test = Test.objects.get(id=id)
         data = json.loads(request.body)
         profile = Profile.objects.get(user=test.user)
@@ -260,13 +262,14 @@ def test(request, id):
         if len(placed) > 0:
             for i in placed:
                 message.append(f"You placed on the <span class='leaderboard-message'>{i} leaderboard</span>.")
-            
         else: 
             test.delete()
             #if the test isn't in a leaderboard, it doesn't need to exist
 
+        time_end = time.perf_counter()
         return JsonResponse({
-            "message": message
+            "message": message,
+            "time": (time_end - time_start)*1000,
         }, status=200)
 
 @csrf_protect

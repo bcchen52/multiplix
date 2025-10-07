@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.key === "Enter") {
             //console.log('enter clicked');
             if (incrementer == null) {
-                console.log("test started");
+                //console.log("test started");
                 make_test();
             }
     }});
@@ -108,6 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector('#default-button').onclick = set_default;
 });
+
+function next_paint() {
+  return new Promise(r => requestAnimationFrame(() => r()));
+}
 
 function reset_message(){
     document.querySelector(".error-message").style.display = "none";
@@ -255,7 +259,10 @@ Test.state = {
     }
 }
 
-function results() {
+async function results() {
+    //mark start of results processing
+    const test_end_time = performance.now();
+
     incrementer = null;
     const home = document.querySelector("#home");
     home.style.display = 'none';
@@ -268,8 +275,10 @@ function results() {
     let qpm = Test.state.score / ((Test.state.time)/60);
     qpm = Math.round(qpm * 100) / 100;
 
-    const result_message = document.querySelector('.result-message');
+    const result_message = document.querySelector('#result-message');
     result_message.innerHTML = "";
+    const result_latency = document.querySelector('#result-latency');
+    result_latency.innerHTML = "";
     const result_col = document.createElement('div');
     result_col.setAttribute('class', 'col-xl-8 col-sm-10 col-12 text-center result-message-text');
 
@@ -305,7 +314,7 @@ function results() {
             result_message.appendChild(result_col);
         } else {
             const csrftoken = getCookie('csrftoken');
-            fetch(`/test/${Test.state.test_id}`, {
+            await fetch(`/test/${Test.state.test_id}`, {
                 method: 'PUT',
                 headers: {'X-CSRFToken': csrftoken},
                 body: JSON.stringify({
@@ -313,11 +322,12 @@ function results() {
                     qpm : qpm,
                     time: Test.state.time,
                     is_default: Test.state.is_default,
+                    test_end: test_end_time,
                 }),
                 credentials: 'same-origin',
             })
             .then( response => response.json())
-            .then( result => {
+            .then( async result => {
                 //console.log(result.message);
                 if (result.message.length > 0){
                     result_col.innerHTML = "<div class='text-center congrats-text'>Congradulations!</div>";
@@ -330,6 +340,11 @@ function results() {
                     });
                     result_message.appendChild(result_col);
                 }
+                await next_paint();
+                await next_paint();
+                const results_displayed_time = performance.now();
+                const total_time = results_displayed_time - test_end_time;
+                result_latency.innerHTML = `${total_time.toFixed(1)}ms end-to-end latency, ${result.time.toFixed(1)}ms server processing`;
             });
         }
     } else {
@@ -342,9 +357,10 @@ function results() {
 function make_test() {
     //hide message block within the test container, reactived if incorrect settings
 
-    //clear input and question field
+    //clear input, question  and response time fields
     document.querySelector('#answer').value = "";
     document.querySelector('#question').innerHTML = "";
+    document.querySelector('#question-latency').innerHTML = "";
 
     const time = get_time();
     
@@ -566,15 +582,26 @@ async function display_question(equation, result, eq_type){
 
     const input = document.querySelector('#answer');
 
-    document.oninput = () => {
-        //console.log(input.value);
-        if ((input.value) == result){     
+    document.oninput = async () => {
+        if ((input.value) == result) {
+            const time_accept = performance.now(); //answer is accepted, start timing
             input.value = "";
             Test.state.correct();
             Test.state.new_time(eq_type, Count.state.count);
+
+            // generate the next question
             generate_question();
+
+            // wait for the DOM to update and paint
+            await next_paint();
+            await next_paint(); // double check for visually ready
+
+            const time_ready = performance.now(); //end timer
+            const latency = time_ready - time_accept;
+            //console.log(`Latency from accepted answer to new equation display: ${latency.toFixed(1)} ms`);
+            document.querySelector('#question-latency').innerHTML = `${latency.toFixed(1)}ms response time`;
         }
-    }
+    };
 
     resize_question();
     question.style.opacity = "1";
@@ -709,8 +736,8 @@ function resize_question(){
     const question = document.querySelector('#question'); 
     const screen_width = document.querySelector('.question-container').getBoundingClientRect().width;
    
-    console.log(screen_width);
-    console.log(question.getBoundingClientRect().width);
+    //console.log(screen_width);
+    //console.log(question.getBoundingClientRect().width);
     if (question.getBoundingClientRect().width > 1 * (screen_width)){
         console.log(Math.floor(((0.8 * screen_width) / (question.getBoundingClientRect().width)) * 80));
         question.style.fontSize = `${Math.floor(((1 * (screen_width)) / (question.getBoundingClientRect().width)) * 80)}px`;
