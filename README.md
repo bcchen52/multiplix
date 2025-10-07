@@ -24,6 +24,12 @@ Questions, titles, and usernames on profile pages are automatically resized to f
 
 The footer will always load outside of the current screen, so it is only visible after scrolling, despite the size of the original screen. 
 
+### Performance Measuring
+
+Response times during a test is measured with Performance API, measuring the time from when a correct answer is detected to after a new question is generated and waiting for two animation-frame ticks with `requestAnimationFrame()` to ensure that the new question is visible. Average time ~10ms, up to 2ms. 
+
+End-to-end latency of a results page is measured also with Performance API, from the time a test ends to after the client receives HTTP response, following the same visibility logic. The time the backend spent is also measured with Python's `time.perf_counter()`. Average end-to-end latency ~70ms, server processing ~50ms.
+
 ### User Competition
 
 Tests taken on the default settings from a logged in user are automatically qualified to enter onto the respective leaderboards and will the results will be reflected on that user's profile page for the best scores, if applicable. If a user is currently on a leaderboard, a trophy will show up on their profile page, up to five for the five leaderboards. 
@@ -39,7 +45,7 @@ To provide a seamless experience when registering, invalid inputs are removed up
 - Allowing "_" and "-" in username registering
 
 # How To Use
-### How to use locally
+### How to run locally
 To create a local version of MultipliX to edit, we need default to revert our Django settings for production.
 
 Clone the repository...
@@ -67,7 +73,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [..., '127.0.0.1']
 
-SECRET_KEY = #secret key here
+SECRET_KEY = #put anything
 ...
 
 import os
@@ -86,7 +92,7 @@ python manage.py makemigrations multiplix
 python manage.py migrate 
 ```
 
-Then, your local repository is ready to make changes to MultipliX. 
+Then, your local repository is ready to run MultipliX with `python manage.py runserver`. 
 
 ### How to apply changes to production
 Ssh into ec2 instance with keypair and cd into `/home/ubuntu/multiplix`
@@ -127,5 +133,3 @@ Run ...
 $ sudo systemctl restart nginx
 ```
 for changes to static files.
-
-# Functionality
